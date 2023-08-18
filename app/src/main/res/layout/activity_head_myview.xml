@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/head_common"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/theme_back_color">
+
+    <TextView
+            android:id="@+id/tv_tittle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center|top"
+            android:text="标题"
+            android:textColor="@color/theme_color"
+            android:textSize="18sp" />
+
+    <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_headerback" />
+
+    <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:gravity="center"
+            android:text="返回"
+            android:textColor="@color/theme_color"
+            android:textSize="16sp" />
+
+    <ImageView
+            android:id="@+id/iv_right"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_search" />
+
+    <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center|top"
+            android:text="保存"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+</RelativeLayout>

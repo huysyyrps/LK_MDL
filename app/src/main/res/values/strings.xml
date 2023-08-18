@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">LKMDL</string>
+    <string name="btn_sure">确定</string>
+    <string name="btn_cancel">取消</string>
+    <string name="phone_title">未检测到IC卡，请更换其他设备拨打 0537-2638599</string>
+    <string name="device_power">仪器电量</string>
+    <string name="current_version">当前版本</string>
+    <string name="parameter_setting">参数设置</string>
+    <string name="file_list">文件列表</string>
+    <string name="no_data">暂无数据</string>
+    <string name="version_check">版本检测</string>
+    <string name="contact_comp">联系我们</string>
+    <string name="exit_project">退出程序</string>
+    <string name="parameter_read">参数读取</string>
+    <string name="inspect_select">测量项目</string>
+    <string name="operate_setting">操作设置</string>
+    <string name="time_select">配置时间</string>
+    <string name="dc_voltage">直流电压测量</string>
+    <string name="ex_voltage">交流电压测量</string>
+    <string name="dc_current">直流电流测量</string>
+    <string name="ex_current">交流电流测量</string>
+    <string name="on_off_measure">通断测量</string>
+
+    <string name="main">主页</string>
+    <string name="save">保存</string>
+
+    <string name="gather_time">采集周期</string>
+    <string name="off_time">通断时间OFF</string>
+    <string name="off_gather_later_time">断电采集启动延时</string>
+    <string name="on_time">通断时间ON</string>
+    <string name="on_later">通电延时时间</string>
+
+    <string name="start_date">开始检测时间</string>
+    <string name="end_date">结束检测时间</string>
+    <string name="only_back_date">单次背光时间</string>
+
+    <string name="aline_time">时间校准</string>
+    <string name="confirm_config">确认配置</string>
+
+    <string name="last_version">已是最新版本</string>
+    <string name="handler_data">数据请求中</string>
+    <string name="version_data_error">版本信息请求失败</string>
+    <string name="have_new_version">发现新版本</string>
+    <string name="net_error">网络异常</string>
+    <string name="no_devices">未获取到设备</string>
+    <string name="version_checking">版本检测中...</string>
+    <string name="device_data">设备数据</string>
+
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+    <include layout="@layout/dialog_item_header" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/linelayout_backthemecolor_radion"
+            android:gravity="top|left"
+            android:paddingLeft="10dp"
+            android:text="@string/phone_title"
+            android:textSize="14dp"/>
+
+    <com.example.lkmdl.view.BaseButton
+            android:id="@+id/btnCancel"
+            style="@style/BaseButton"
+            android:layout_width="match_parent"
+            app:bg_color="@color/theme_color"
+            app:bg_corner="5dp"
+            android:text="@string/btn_cancel"
+            android:gravity="center"
+            android:layout_gravity="center"/>
+</LinearLayout>
