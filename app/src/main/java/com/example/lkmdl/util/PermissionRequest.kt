@@ -18,7 +18,7 @@ object PermissionRequest {
         val requestList = ArrayList<String>()
         requestList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         requestList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        requestList.add(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS)
+//        requestList.add(Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS)
 //        requestList.add(Manifest.permission.ACCESS_WIFI_STATE)
 //        requestList.add(Manifest.permission.CAMERA)
         if (requestList.isNotEmpty()) {

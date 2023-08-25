@@ -65,6 +65,15 @@
         <item name="android:paddingTop">0dp</item>
     </style>
 
+    <!--自定义MyTextView-->
+    <style name="MyTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <!-- 自定义横向分割线属性   -->
     <style name="HLine">
         <item name="android:layout_width">match_parent</item>
@@ -143,6 +152,27 @@
         <item name="background">@color/theme_color</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/theme_color</item>
+    </style>
+
+    <!--自定义radiobutton-->
+    <style name="RadionButton">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:textSize">11dip</item>
+        <item name="android:paddingBottom">6dip</item>
+        <item name="android:paddingLeft">6dip</item>
+        <item name="android:paddingRight">6dip</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <!--        <item name="android:layout_marginTop">10dp</item>-->
+        <!--        <item name="android:layout_marginBottom">10dp</item>-->
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <!--        <item name="android:textColor">@color/radionbutton_select</item>-->
+        <item name="android:textColor">@color/whith</item>
     </style>
 
     <!--自定义header属性-->

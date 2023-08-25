@@ -1,5 +1,6 @@
 package com.example.lkmdl.util.time_picker
 
+import android.app.Activity
 import android.graphics.Color
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.example.lkmdl.MyApplication
@@ -10,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object BaseTimePickerImp {
-    fun timePickerSetting(settingActivity: SettingActivity, param: BaseTimePicker) {
+    fun timePickerSetting(settingActivity: Activity, param: BaseTimePicker) {
         val selectedDate = Calendar.getInstance()
         val startDate = Calendar.getInstance()
         val endDate = Calendar.getInstance()
@@ -19,7 +20,7 @@ object BaseTimePickerImp {
         var pvTime = TimePickerBuilder(settingActivity) { date, v -> //选中事件回调
             param.backDate(getTime(date))
         }
-            .setType(booleanArrayOf(true, true, true, true, true, true)) // 默认全部显示
+            .setType(booleanArrayOf(true, true, true, true, true, false)) // 默认全部显示
             .setCancelText("取消") //取消按钮文字
             .setSubmitText("确认") //确认按钮文字
             .setTitleSize(18) //标题文字大小
@@ -44,7 +45,8 @@ object BaseTimePickerImp {
     }
 
     fun getTime(date: Date):String {
-        var format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        //yyyy-MM-dd HH:mm:ss
+        var format =  SimpleDateFormat("yyyy/M/d H:m")
         return format.format(date)
     }
 }

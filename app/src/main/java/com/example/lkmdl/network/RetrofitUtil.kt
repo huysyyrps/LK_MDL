@@ -1,6 +1,6 @@
 package com.example.lkmdl.network
 
-import com.example.lkacmf.ApiAddress
+import com.example.lkmdl.ApiAddress
 import com.example.lkmdl.AllApi
 import com.example.lkmdl.util.Constant
 import com.google.gson.Gson

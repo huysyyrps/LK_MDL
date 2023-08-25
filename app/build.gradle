@@ -68,4 +68,12 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     //权限申请
     implementation 'com.guolindev.permissionx:permissionx:1.7.1'
+    //鲁班图片压缩
+    implementation 'top.zibin:Luban:1.1.8'
+    //折线图
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //ble
+    implementation 'com.gitee.sscl:ble-library-for-kotlin:0.0.2'
+    //常用基础库(本应用是将String转为byteArray)
+    implementation 'com.gitee.sscl:baselibrary-for-kotlin:2.4.0'
 }
