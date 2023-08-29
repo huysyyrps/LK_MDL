@@ -11,6 +11,7 @@ import com.example.lkacmf.adapter.FileListAdapter
 import com.example.lkmdl.MyApplication.Companion.context
 import com.example.lkmdl.R
 import com.example.lkmdl.util.*
+import com.example.lkmdl.util.ble.*
 import com.example.lkmdl.util.dialog.DialogCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.example.lkmdl.util.file_util.ReadFileCallBack
@@ -45,10 +46,13 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
     var offDirectVoltageSet:LineDataSet? = null
     var offExchangeCurrentSet:LineDataSet? = null
     var offExchangeVoltageSet:LineDataSet? = null
-    var onDirectCurrentSet: LineDataSet? = null
+    private var onDirectCurrentSet: LineDataSet? = null
     var onDirectVoltageSet:LineDataSet? = null
     var onExchangeCurrent:LineDataSet? = null
     var onExchangeVoltage:LineDataSet? = null
+
+    var fileList = ArrayList<String>()
+    var hexFileList = mutableListOf<String>()
 
     companion object {
         fun actionStart(context: Context) {
@@ -293,11 +297,70 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
         return false
     }
 
+    //写入数据
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun writeHandData(makeHandData: String) {
+        BleContent.writeData(
+            makeHandData,
+            CharacteristicUuid.ConstantCharacteristicUuid, object : BleWriteCallBack {
+                override fun writeCallBack(writeBackData: String) {
+                    ReadData()
+                }
+            })
+    }
+
+    //读取数据
+    fun ReadData() {
+        BleContent.readData(CharacteristicUuid.ConstantCharacteristicUuid, object : BleReadCallBack {
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun readCallBackSuccess(readData: Array<String>, stringData: String) {
+                LogUtil.e("TAG",stringData)
+                if (readData.isNotEmpty()) {
+                    if (readData[0] == "A5" && readData.size == 24) {
+                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                            == stringData.substring(stringData.length - 2, stringData.length)) {
+                            var fileNum = Integer.parseInt(readData[1],16)
+                            if (fileList.size<fileNum){
+                                var fileName = BinaryChange.hexStr2Str(stringData.substring(6,44))
+                                fileList.add(fileName)
+                                hexFileList.add(stringData.substring(6,44))
+                            }
+                        }
+                    }
+                    selectIndex = 0
+                    adapter = FileListAdapter(fileList, selectIndex, this@ReadFileActivity, object : AdapterPositionCallBack {
+                            override fun backPosition(index: Int) {
+                                selectIndex = index
+                                readFile(selectPath)
+                            }
+                        })
+                    recyclerView.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                }
+
+
+            }
+
+            override fun readCallBackMessgae(state: String) {
+                LogUtil.e("TAG", state)
+            }
+        })
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.linRight -> {
-                PopupMenu.showPopupMenu(linRight, "Desc", this)
+                PopupMenu.showPopupMenu(linRight, "Desc", this,object : PopupMenuCallBack{
+                    override fun projectBack() {
+                        fileList.clear()
+                        writeHandData(BleDataMake.readFileList())
+                    }
+
+                    override fun localBack() {
+                        getFileList()
+                    }
+                })
             }
             R.id.ivSelectTiem->{
                 linSelectTime.visibility = View.VISIBLE

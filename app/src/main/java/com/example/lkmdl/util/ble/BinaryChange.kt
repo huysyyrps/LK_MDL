@@ -1,5 +1,11 @@
 package com.example.lkmdl.util.ble
 
+import okhttp3.internal.and
+import org.jetbrains.annotations.NotNull
+import java.io.ByteArrayOutputStream
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets
+
 object BinaryChange {
     fun tenToHex(data: Int) = Integer.toHexString(data)!!
 
@@ -41,6 +47,55 @@ object BinaryChange {
             bytes[i] = subStr.toInt(16).toByte()
         }
         return bytes
+    }
+
+    //设置字符串样式
+    fun hex2Decimal(hexStr:String, digits:Int):String{
+        return String.format("%0"+digits+"d", BigInteger(hexStr, 16),true);
+    }
+
+    /**
+     * 10进制转16进制 长度为自定义，满足不同的需求， 0填充在左侧
+     * @param serialNum 需要被转换的数字
+     * @param length 需要转换成的长度
+     * @return 左侧为0的自定义长度的16进制
+     * @author hjm
+     * @date 2023-05-16
+     */
+    fun toHex(serialNum: Int, length: Int): String? {
+
+        // String.format("%016x", 1) 将10进制的1转成16进制，不足的以0补上，16位，结果00000000000000001
+        // String.format("%04x", 1) 将10进制的1转成16进制，不足的以0补上，4位，结果0001
+        return String.format("%0" + length + "x", serialNum)
+    }
+
+
+    /*
+ * 二进制转十六进制
+ * @description:
+ * @date: 2022/4/1 16:11
+ * @param: binary 二进制
+ * @return: java.lang.String 16进制字符串
+ */
+    @NotNull
+    fun toHexString(binary1: String): String? {
+        var binary = ""
+        if (binary1.length==5){
+            binary = "000$binary1"
+        }
+        if (binary.isEmpty() || binary.length % 8 != 0) return ""
+        val hex = java.lang.StringBuilder()
+        var iTmp: Int
+        var i = 0
+        while (i < binary.length) {
+            iTmp = 0
+            for (j in 0..3) {
+                iTmp += binary.substring(i + j, i + j + 1).toInt() shl 4 - j - 1
+            }
+            hex.append(Integer.toHexString(iTmp))
+            i += 4
+        }
+        return hex.toString()
     }
 
     /**
@@ -90,6 +145,79 @@ object BinaryChange {
         return dest
     }
 
+
+    private const val hexString = "0123456789abcdef"
+
+    /*
+     * 将字符串编码成16进制数字,适用于所有字符（包括中文）
+     */
+    open fun encode(str: String): String {
+        //根据默认编码获取字节数组
+        val bytes = str.toByteArray()
+        val sb = java.lang.StringBuilder(bytes.size * 2)
+        //将字节数组中每个字节拆解成2位16进制整数
+        for (i in bytes.indices) {
+            sb.append(hexString[bytes[i] and 0xf0 shr 4])
+            sb.append(hexString[bytes[i] and 0x0f])
+        }
+        return sb.toString()
+    }
+
+    /**
+     * 字符串转换成为16进制(无需Unicode编码)
+     * @param str
+     * @return
+     */
+    fun str2HexStr(str: String): String? {
+        val chars = "0123456789ABCDEF".toCharArray()
+        val sb = java.lang.StringBuilder("")
+        val bs = str.toByteArray()
+        var bit: Int
+        for (i in bs.indices) {
+            bit = bs[i] and 0x0f0 shr 4
+            sb.append(chars[bit])
+            bit = bs[i] and 0x0f
+            sb.append(chars[bit])
+
+            // sb.append(' ');
+        }
+        return sb.toString().trim { it <= ' ' }
+    }
+
+
+    /*
+     * 将16进制数字解码成字符串,适用于所有字符（包括中文）
+     */
+    open fun decode(bytes: String): String {
+        val baos = ByteArrayOutputStream(bytes.length / 2)
+        //将每2位16进制整数组装成一个字节
+        var i = 0
+        while (i < bytes.length) {
+            baos.write(hexString.indexOf(bytes[i]) shl 4 or hexString.indexOf(bytes[i + 1]))
+            i += 2
+        }
+//        return String(baos.toByteArray())
+        return String(baos.toByteArray(), StandardCharsets.UTF_8)
+    }
+    /**
+     * 16进制直接转换成为字符串(无需Unicode解码)
+     * @param hexStr
+     * @return  可以转换.
+     */
+    fun hexStr2Str(hexStr: String): String {
+        val str = "0123456789ABCDEF"
+        val hexs = hexStr.toCharArray()
+        val bytes = ByteArray(hexStr.length / 2)
+        var n: Int
+        for (i in bytes.indices) {
+            n = str.indexOf(hexs[2 * i]) * 16
+            n += str.indexOf(hexs[2 * i + 1])
+            bytes[i] = (n and 0xff).toByte()
+        }
+        return String(bytes)
+    }
+
+
     /**
      * 校验
      */
@@ -117,54 +245,3 @@ object BinaryChange {
     }
 
 }
-
-//十进制转2进制13->1101
-//13.toString(2)
-// 或者
-//Integer.toBinaryString(13)
-
-//十进制转8进制 13->15
-//13.toString(8)
-// 或者
-//Integer.toOctalString(13)
-
-//十进制转16进制 13->d
-//13.toString(16)
-// 或者
-//Integer.toHexString(13)
-
-//2进制转8进制 1101->13->15
-//kotlin复制代码// 先转10进制再转8进制
-//"1101".toInt(2).toString(8)
-//2进制转10进制 1101->13
-//kotlin复制代码"1101".toInt(2)
-// 或者
-//Integer.valueOf("1101",2)
-
-//2进制转16进制 1101->13->d
-// 先转10进制再转16进制
-//"1101".toInt(2).toString(16)
-
-//八进制
-//8进制转2进制 15->13->1101
-//kotlin复制代码// 先转10进制再转2进制
-//"15".toInt(8).toString(2)
-//8进制转10进制 15->13
-//kotlin复制代码"15".toInt(8)
-// 或者
-//Integer.valueOf("15",8)
-//8进制转16进制 15->13->d
-//kotlin复制代码// 先转10进制再转16进制
-//"15".toInt(8).toString(16)
-
-//十六进制
-//16进制转2进制 d->13->1101
-//kotlin复制代码// 先转10进制再转2进制
-//"d".toInt(16).toString(2)
-//16进制转8进制 d->13->15
-//kotlin复制代码// 先转10进制再转8进制
-//"d".toInt(16).toString(8)
-//16进制转10进制 d->13
-//kotlin复制代码"d".toInt(16)
-//或者
-//Integer.valueOf("d",16)

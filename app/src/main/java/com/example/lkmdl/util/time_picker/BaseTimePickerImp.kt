@@ -20,7 +20,7 @@ object BaseTimePickerImp {
         var pvTime = TimePickerBuilder(settingActivity) { date, v -> //选中事件回调
             param.backDate(getTime(date))
         }
-            .setType(booleanArrayOf(true, true, true, true, true, false)) // 默认全部显示
+            .setType(booleanArrayOf(true, true, true, true, true, true)) // 默认全部显示
             .setCancelText("取消") //取消按钮文字
             .setSubmitText("确认") //确认按钮文字
             .setTitleSize(18) //标题文字大小
@@ -45,8 +45,8 @@ object BaseTimePickerImp {
     }
 
     fun getTime(date: Date):String {
-        //yyyy-MM-dd HH:mm:ss
-        var format =  SimpleDateFormat("yyyy/M/d H:m")
+        //yyyy-MM-dd HH:mm:ss   yyyy/M/d H:m
+        var format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         return format.format(date)
     }
 }

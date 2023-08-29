@@ -3,35 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/drawable-hdpi/ic_launcher_background.xml" value="0.328" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/drawable/linelayout_backthemecolor_radion.xml" value="0.2645" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/drawable/linelayout_black_radion.xml" value="0.2885" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/drawable/linelayout_themecloce_radion.xml" value="0.2935" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/drawable/scanning.xml" value="0.2885" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_config_option.xml" value="0.2526041666666667" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_head_myview.xml" value="0.33" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_main.xml" value="0.3390625" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_read.xml" value="0.3380208333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_read_file.xml" value="0.3359375" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_setting.xml" value="0.3255208333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/adapter_array_item.xml" value="0.20572916666666666" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/adapter_file_list.xml" value="0.22239583333333332" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/adapter_select_item.xml" value="0.31875" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/base_title.xml" value="0.3380208333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_config_option.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower_error.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_item_header.xml" value="0.259375" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_phone.xml" value="0.6131639722863741" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_scan_again.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/drawer_item.xml" value="0.3255208333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/progress_dialog.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/switch_item.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/title_item.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/view_update_dialog_custom.xml" value="0.3536458333333333" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/menu/dialog_item.xml" value="0.3307291666666667" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/menu/menu.xml" value="0.3307291666666667" />
-        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2885" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_setting.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_config_option.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower_error.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_item_header.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_phone.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_save_data.xml" value="0.2609375" />
       </map>
     </option>
   </component>

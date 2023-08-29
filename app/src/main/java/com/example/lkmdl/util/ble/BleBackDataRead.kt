@@ -88,43 +88,6 @@ object BleBackDataRead {
         }
     }
 
-    /**
-     * 授权读取
-     */
-    fun readEmpowerData(data: String) {
-        var backData = BinaryChange.hexStringToByte(data)
-        //校验
-        if (BaseData.hexStringToBytes(
-                data.substring(
-                    0,
-                    data.length - 2
-                )
-            ) == data.substring(data.length - 2, data.length)
-        ) {
-            when {
-                backData[2] == "00" -> {
-                    LogUtil.e("TAG", "授权失败")
-                    context.resources.getString(R.string.empower_faile).showToast(context)
-                }
-                backData[2] == "01" -> {
-                    LogUtil.e("TAG", "授权成功")
-                    context.resources.getString(R.string.empower_success).showToast(context)
-                    //读取配置
-                    BleContent.writeData(
-                        BleDataMake.makeReadSettingData(),
-                        CharacteristicUuid.ConstantCharacteristicUuid, object : BleWriteCallBack {
-                            override fun writeCallBack(writeBackData: String) {
-                                LogUtil.e("TAG", "写入数据回调 = $writeBackData")
-                            }
-                        })
-                }
-                else -> {
-                    initHandErrorDialog(context)
-                }
-            }
-        }
-    }
-
 
     /**
      * 授权弹窗

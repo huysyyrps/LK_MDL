@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.example.lkmdl.MyApplication
 import com.example.lkmdl.R
 import com.example.lkmdl.activity.MainActivity
 import com.example.lkmdl.activity.ReadFileActivity
@@ -23,6 +24,7 @@ import com.example.lkmdl.util.showToast
 import com.permissionx.guolindev.PermissionX
 import kotlinx.android.synthetic.main.activity_read_file.recyclerView
 import kotlinx.android.synthetic.main.dialog_config_option.*
+import kotlinx.android.synthetic.main.dialog_save_data.*
 import kotlinx.android.synthetic.main.dialog_scan_again.*
 import java.util.ArrayList
 
@@ -185,7 +187,6 @@ class DialogUtil {
 
         dialog.btnCancel.setOnClickListener {
             dialog.dismiss()
-            activity.finish()
         }
         dialog.btnSure.setOnClickListener {
             dialog.dismiss()
@@ -210,5 +211,36 @@ class DialogUtil {
 
             })
         }
+    }
+
+    /**
+     * 下次保存的文件名称
+     */
+    fun saveDataDialog(activity: MainActivity, callback: DialogSaveDataCallBack): MaterialDialog {
+        dialog = MaterialDialog(activity)
+            .cancelable(false)
+            .show {
+                customView(    //自定义弹窗
+                    viewRes = R.layout.dialog_save_data,//自定义文件
+                    dialogWrapContent = true,    //让自定义宽度生效
+                    scrollable = true,            //让自定义宽高生效
+                    noVerticalPadding = true    //让自定义高度生效
+                )
+                cornerRadius(16f)
+            }
+        dialog.btnSaveCancel.setOnClickListener {
+            dialog.dismiss()
+            callback.cancelCallBack()
+        }
+        dialog.btnSaveSure.setOnClickListener {
+            if (dialog.etSaveName.text.toString().trim { it <= ' ' } == ""){
+                "请输入文件名称".showToast(MyApplication.context)
+                return@setOnClickListener
+            }else{
+                dialog.dismiss()
+                callback.sureCallBack(dialog.etSaveName.text.toString())
+            }
+        }
+        return dialog
     }
 }

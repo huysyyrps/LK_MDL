@@ -88,4 +88,6 @@
 
     <string name="has_register">已注册</string>
 
+    <string name="save_data">保存文件名</string>
+
 </resources>

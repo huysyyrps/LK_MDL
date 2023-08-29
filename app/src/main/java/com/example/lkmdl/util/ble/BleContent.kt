@@ -132,6 +132,11 @@ object BleContent {
         bleScanner.stopScan()
     }
 
+//    //是否连接
+//    fun isConnection():Boolean{
+//        return bleConnectCallBack
+//    }
+
 
     /**
      * 初始化BLE连接器
@@ -249,6 +254,7 @@ object BleContent {
          */
         override fun gattStatusError(gattErrorCode: Int) {
             bleConnectorInstance.close()
+            LogUtil.e("TAG","$gattErrorCode")
             bleConnectCallBack.onConnectedStater(MyApplication.context.resources.getString(R.string.connect_gatt_error))
         }
     }
@@ -295,7 +301,7 @@ object BleContent {
      */
     private val onDescriptorWriteDataListener = OnDescriptorWriteDataListener { descriptor, value ->
 //        showWriteDataResultDialog(descriptor.uuid.toString(), value)
-        LogUtil.e("TAG","描述写入回调+"+descriptor.uuid.toString())
+//        LogUtil.e("TAG","描述写入回调+"+descriptor.uuid.toString())
     }
 
     /**

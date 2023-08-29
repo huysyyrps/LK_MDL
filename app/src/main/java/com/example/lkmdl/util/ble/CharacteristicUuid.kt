@@ -10,6 +10,11 @@ object CharacteristicUuid {
     const val CONNECTHEADER = "BE"
     const val CONNECTCODE = "A0"
     const val EMPOWERCODE = "02"
-    const val READSETTINGCODE = "05"
+    const val READSETTINGCODE = "A1"
+    const val ALINETIMECODE = "A3"
+    const val ALINETIMETAG = "00"
+    const val READFILRLIST = "A5"
+
     const val METERCODE = "06"
+    const val HANDCODE = "B0"
 }

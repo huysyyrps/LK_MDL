@@ -36,7 +36,7 @@ object BleReadDataOperate {
         } else if (readData[1] == "01") {
             LogUtil.e("TAG", MyApplication.context.resources.getString(R.string.has_register))
             //注册成功开始读取数据
-            MainActivity().writeHandData("BEA15F")
+//            MainActivity().writeHandData("BEA15F")
         }
     }
 }

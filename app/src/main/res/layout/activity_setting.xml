@@ -55,7 +55,7 @@
                                 android:text="@string/dc_voltage" />
 
                         <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sb_text"
+                                android:id="@+id/sbDCVoltage"
                                 style="@style/SwitchButtonStyle"
                                 app:kswTextAdjust="-2dp"
                                 app:kswTextExtra="8dp"
@@ -75,6 +75,7 @@
                                 android:text="@string/ex_voltage" />
 
                         <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/sbEXVoltage"
                                 style="@style/SwitchButtonStyle"
                                 app:kswTextAdjust="-2dp"
                                 app:kswTextExtra="8dp"
@@ -94,6 +95,7 @@
                                 android:text="@string/dc_current" />
 
                         <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/sbDCCurrent"
                                 style="@style/SwitchButtonStyle"
                                 app:kswTextAdjust="-2dp"
                                 app:kswTextExtra="8dp"
@@ -121,6 +123,7 @@
                                 android:text="@string/ex_current" />
 
                         <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/sbEXCurrent"
                                 style="@style/SwitchButtonStyle"
                                 app:kswTextAdjust="-2dp"
                                 app:kswTextExtra="8dp"
@@ -140,6 +143,7 @@
                                 android:text="@string/on_off_measure" />
 
                         <com.kyleduo.switchbutton.SwitchButton
+                                android:id="@+id/sbOffOn"
                                 style="@style/SwitchButtonStyle"
                                 app:kswTextAdjust="-2dp"
                                 app:kswTextExtra="8dp"
@@ -211,7 +215,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/gather_time" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etGatherTime"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -224,7 +231,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/off_time" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etOffTime"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -237,7 +247,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/off_gather_later_time" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etGatherLaterTime"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -258,7 +271,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/on_time" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etOnTime"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -271,7 +287,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/on_later" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etOnLater"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -284,7 +303,10 @@
                                     style="@style/SelectTextView"
                                     app:content_title="@string/only_back_date" />
 
-                            <EditText style="@style/EditText" />
+                            <EditText
+                                    android:id="@+id/etBackTime"
+                                    style="@style/EditText"
+                                    android:inputType="number"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -409,6 +431,7 @@
                     app:bg_corner="5dp" />
 
             <com.example.lkmdl.view.BaseButton
+                    android:id="@+id/btnUpData"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
