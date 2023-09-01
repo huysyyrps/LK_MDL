@@ -1,6 +1,5 @@
 package com.example.lkmdl.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -10,14 +9,17 @@ import androidx.annotation.RequiresApi
 import com.example.lkmdl.R
 import com.example.lkmdl.util.BaseActivity
 import com.example.lkmdl.util.BaseDateUtil
+import com.example.lkmdl.util.LogUtil
 import com.example.lkmdl.util.ble.BinaryChange
 import com.example.lkmdl.util.ble.BleTimeData
+import com.example.lkmdl.util.ble.blenew.BleConstant
+import com.example.lkmdl.util.showToast
 import com.example.lkmdl.util.time_picker.BaseTimePicker
 import com.example.lkmdl.util.time_picker.BaseTimePickerImp
 import kotlinx.android.synthetic.main.activity_setting.*
 import java.text.SimpleDateFormat
 
-class SettingActivity : BaseActivity(), View.OnClickListener {
+class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCallBack {
     private var dcVoltage = 0
     private var exVoltage = 0
     private var dcCurrent = 0
@@ -73,6 +75,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         settingHeader.setActivity(this)
+        BleConstant.setReadCallBack(this)
         //点击事件
         linStartTime.setOnClickListener(this)
         linEndTime.setOnClickListener(this)
@@ -202,12 +205,20 @@ class SettingActivity : BaseActivity(), View.OnClickListener {
 
                 var data = "BEA2$s$gatherTime$offTime$gatherLaterTime$onTime$onLater$startTime$endTime$backTime"
                 data = "$data${BinaryChange.HexStringToBytes(data)}"
-                MainActivity().writeHandData(data)
+                BleConstant.startWrite(data)
             }
         }
     }
 
-    fun finishActivity(){
-        finish()
+    override fun callBack(readData: Array<String>, stringData: String) {
+        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+            == stringData.substring(stringData.length - 2, stringData.length)) {
+            if (readData[1] == "01") {
+                LogUtil.e("TAG", "配置成功")
+                finish()
+            } else if (readData[1] == "00") {
+                "配置失败".showToast(this)
+            }
+        }
     }
 }

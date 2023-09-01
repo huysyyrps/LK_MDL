@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     //ble
     implementation 'com.gitee.sscl:ble-library-for-kotlin:0.0.2'
+    implementation 'com.clj.fastble:FastBleLib:2.3.4'
     //常用基础库(本应用是将String转为byteArray)
     implementation 'com.gitee.sscl:baselibrary-for-kotlin:2.4.0'
 }

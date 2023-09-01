@@ -27,7 +27,7 @@ class RegisterPresenter constructor(context : Context, view: RegisterContract.Vi
         RetrofitUtil().getInstanceRetrofit()?.initRetrofitMain()?.getRegisterInfo(company)
             ?.subscribeOn(Schedulers.io())
             ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe(object : BaseObserverNoEntry<RegisterBean?>(context!!, context!!.resources.getString(R.string.handler_data)) {
+            ?.subscribe(object : BaseObserverNoEntry<RegisterBean?>(context, context.resources.getString(R.string.handler_data)) {
                 override fun onSuccees(t: RegisterBean?) {
                     if (t?.state == 200) {
                         view.setRegisterInfo(t)

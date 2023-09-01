@@ -20,11 +20,17 @@ import com.example.lkmdl.presenter.VersionInfoPresenter
 import com.example.lkmdl.util.*
 import com.example.lkmdl.util.apk_updata.VersionCheck
 import com.example.lkmdl.util.ble.*
+import com.example.lkmdl.util.ble.blenew.BleBackDataCallBack
+import com.example.lkmdl.util.ble.blenew.BleConstant
 import com.example.lkmdl.util.dialog.DialogSaveDataCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
+
 
 class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.View, RegisterContract.View {
     private var version: String = "1.0.0"
@@ -32,6 +38,37 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     private lateinit var versionInfoPresenter: VersionInfoPresenter
     private lateinit var registerPresenter: RegisterPresenter
     private var versionInfo = "01"
+
+    var dcVoltage: Int = 0
+    var exVoltage: Int = 0
+    var dcCurrent: Int = 0
+    var exCurrent: Int = 0
+    var offOnState: Int = 0
+    var gatherTime: Int = 0
+    var offTine: Int = 0
+    var gatherLaterTime: Int = 0
+    var onTime: Int = 0
+    var onLater: Int = 0
+    var backTime: Int = 0
+
+    var startYear: Int = 0
+    var startMoon: String = ""
+    var startDay: String = ""
+    var startHour: String = ""
+    var startDivide: String = ""
+    var startSecond: String = ""
+
+    var endYear: Int = 0
+    var endMoon: String = ""
+    var endDay: String = ""
+    var endHour: String = ""
+    var endDivide: String = ""
+    var endSecond: String = ""
+    var index = 0
+    val lineData = LineData()
+    private var selectList = mutableListOf<Boolean>(true, false, false, false, false, false, false, false)
+
+
     private val tabItemStr = arrayListOf<String>().apply {
         add(context.resources.getString(R.string.main))
         add(context.resources.getString(R.string.save))
@@ -55,32 +92,17 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         //tabLayout选择监听
         tabLayoutSelect()
 
-        BleBackDataRead.BleBackDataContext(this)
+//        BleBackDataRead.BleBackDataContext(this)
         if (!bluetoothAdapter.isEnabled) {
             activityResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
         } else {
             //是否通过全部权限
             var permissionTag = DialogUtil().requestPermission(this)
             if (permissionTag) {
-                //是否连接成功
-                DialogUtil().bleScanAndConnection(this@MainActivity, object : BleScanAndConnectCallBack {
-                    override fun onScanFinish() {
-                        R.string.scan_finish.showToast(this@MainActivity)
-                        DialogUtil().initScanAgainDialog("scan", this@MainActivity)
-                    }
-
-                    override fun onScanFail() {
-                        R.string.scan_fail.showToast(this@MainActivity)
-                    }
-
-                    override fun onConnectedSuccess() {
-                        R.string.connect_success.showToast(this@MainActivity)
-                        writeHandData(BleDataMake.makeHandData())
-                    }
-
-                    override fun onConnectedAgain(state: String) {
-                        state.showToast(this@MainActivity)
-                        DialogUtil().initScanAgainDialog("connect", this@MainActivity)
+                BleConstant.setBleManage(this, object : BleBackDataCallBack {
+                    override fun backData(readData: Array<String>, stringData: String) {
+                        LogUtil.e("TAG", stringData)
+                        readData(readData, stringData)
                     }
 
                 })
@@ -97,10 +119,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         linFileList.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
-
-        LogUtil.e("TAG",BinaryChange.encode("文字"))
     }
-
 
     //开启蓝牙
     @RequiresApi(Build.VERSION_CODES.S)
@@ -114,117 +133,220 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         }
     }
 
-    //写入数据
+    //读取数据
     @RequiresApi(Build.VERSION_CODES.O)
-    fun writeHandData(makeHandData: String) {
-//        Thread.sleep(1500)
-        BleContent.writeData(
-            makeHandData,
-            CharacteristicUuid.ConstantCharacteristicUuid, object : BleWriteCallBack {
-                override fun writeCallBack(writeBackData: String) {
-                    ReadData()
+    fun readData(readData: Array<String>, stringData: String) {
+        if (readData.isNotEmpty()) {
+            //握手命令回传报文帧头
+            if (readData[0] == "A0" && readData.size == 16) {
+                //握手命令回传报文帧头
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
+                    versionInfo = readData[2]
+                    var haveRegister = readData[1]
+                    if (haveRegister == "01") {
+                        LogUtil.e("TAG", context.resources.getString(R.string.has_register))
+                    } else {
+                        BleReadDataOperate.OperateRegisterData(readData, this.registerPresenter)
+                    }
                 }
-            })
+            }
+            //激活命令回传报文帧头
+            if (readData[0] == "B0" && readData.size == 3) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                    if (readData[1] == "01") {
+                        LogUtil.e("TAG", "注册成功")
+                    } else if (readData[1] == "00") {
+                        LogUtil.e("TAG", "注册失败")
+                    }
+                }
+            }
+            //读取当前正在运行的配置命令回传报文帧头
+            if (readData[0] == "A1" && readData.size == 47) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                    var offOn = Integer.toBinaryString(Integer.parseInt(readData[21], 16))
+                    while (offOn.length < 5) {
+                        offOn = "0$offOn"
+                    }
+                    if (offOn.length >= 5) {
+                        dcVoltage = offOn.substring(0, 1).toInt()
+                        exVoltage = offOn.substring(1, 2).toInt()
+                        dcCurrent = offOn.substring(2, 3).toInt()
+                        exCurrent = offOn.substring(3, 4).toInt()
+                        offOnState = offOn.substring(4, 5).toInt()
+                        gatherTime = Integer.parseInt("${readData[23]}${readData[22]}", 16)
+                        offTine = Integer.parseInt("${readData[25]}${readData[24]}", 16)
+                        gatherLaterTime = Integer.parseInt("${readData[27]}${readData[26]}", 16)
+                        onTime = Integer.parseInt("${readData[29]}${readData[28]}", 16)
+                        onLater = Integer.parseInt("${readData[31]}${readData[30]}", 16)
+                        backTime = Integer.parseInt("${readData[45]}${readData[44]}", 16)
+
+                        startYear = Integer.parseInt(readData[32], 16)
+                        startMoon = BinaryChange.hex2Decimal(readData[33], 2)
+                        startDay = BinaryChange.hex2Decimal(readData[34], 2)
+                        startHour = BinaryChange.hex2Decimal(readData[35], 2)
+                        startDivide = BinaryChange.hex2Decimal(readData[36], 2)
+                        startSecond = BinaryChange.hex2Decimal(readData[37], 2)
+
+                        endYear = Integer.parseInt(readData[38], 16)
+                        endMoon = BinaryChange.hex2Decimal(readData[39], 2)
+                        endDay = BinaryChange.hex2Decimal(readData[40], 2)
+                        endHour = BinaryChange.hex2Decimal(readData[41], 2)
+                        endDivide = BinaryChange.hex2Decimal(readData[42], 2)
+                        endSecond = BinaryChange.hex2Decimal(readData[43], 2)
+                    }
+                    var startTime = "20$startYear-$startMoon-$startDay $startHour:$startDivide:$startSecond"
+                    var endTime = "20$endYear-$endMoon-$endDay $endHour:$endDivide:$endSecond"
+                    SettingActivity.actionStart(
+                        this@MainActivity, dcVoltage, exVoltage, dcCurrent, exCurrent, offOnState,
+                        gatherTime, offTine, gatherLaterTime, onTime, onLater, backTime, startTime, endTime
+                    )
+                }
+            }
+//            //配置测量参数命令反馈帧头
+//            if (readData[0] == "A2" && readData.size == 3) {
+//                //激活命令回传报文
+//                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+//                    == stringData.substring(stringData.length - 2, stringData.length)) {
+//                    if (readData[1] == "01") {
+//                        LogUtil.e("TAG", "配置成功")
+//                    } else if (readData[1] == "00") {
+//                        "配置失败".showToast(this@MainActivity)
+//                    }
+//                }
+//            }
+            //时间校准命令报文识别码
+            if (readData[0] == "A3" && readData.size == 9) {
+                //激活命令回传报文
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
+                    if (readData[1] == "01") {
+                        "校准成功".showToast(this@MainActivity)
+                    } else if (readData[1] == "00") {
+                        "校准失败".showToast(this@MainActivity)
+                    }
+                }
+            }
+
+            if (readData[0] == "A7" && readData.size == 124) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
+                    var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
+                    val arrayData = itemData.split(",").toTypedArray()
+                    setEntry(arrayData, index)
+                    index++
+                }
+            }
+        }
     }
 
-    //读取数据
-    fun ReadData() {
-        BleContent.readData(CharacteristicUuid.ConstantCharacteristicUuid, object : BleReadCallBack {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun readCallBackSuccess(readData: Array<String>, stringData: String) {
-                LogUtil.e("TAG",stringData)
-                if (readData.isNotEmpty()) {
-                    if (readData[0] == "A0" && readData.size == 16) {
-                        //握手命令回传报文帧头
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                            versionInfo  = readData[1]
-                            BleReadDataOperate.OperateRegisterData(readData,registerPresenter)
-                        }
-                    }
-                    if (readData[0] == "B0" && readData.size == 3) {
-                        //激活命令回传报文
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                                if (readData[1]=="01"){
-                                    LogUtil.e("TAG","注册成功")
-                                }else if (readData[1]=="00"){
-                                    LogUtil.e("TAG","注册失败")
-                                }
-                        }
-                    }
-                    if (readData[0] == "A1" && readData.size == 47) {
-                        //激活命令回传报文
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                            var offOn = Integer.toBinaryString(Integer.parseInt(readData[21], 16))
-                            while(offOn.length < 5) {
-                                offOn = "0$offOn"
-                            }
-                            if (offOn.length>=5){
-                                var dcVoltage = offOn.substring(0,1).toInt()
-                                var exVoltage = offOn.substring(1,2).toInt()
-                                var dcCurrent = offOn.substring(2,3).toInt()
-                                var exCurrent = offOn.substring(3,4).toInt()
-                                var offOnState = offOn.substring(4,5).toInt()
-                                var gatherTime = Integer.parseInt("${readData[23]}${readData[22]}", 16)
-                                var offTine = Integer.parseInt("${readData[25]}${readData[24]}", 16)
-                                var gatherLaterTime = Integer.parseInt("${readData[27]}${readData[26]}", 16)
-                                var onTime = Integer.parseInt("${readData[29]}${readData[28]}", 16)
-                                var onLater = Integer.parseInt("${readData[31]}${readData[30]}", 16)
-                                var backTime = Integer.parseInt("${readData[45]}${readData[44]}", 16)
+    private fun setEntry(arrayData: Array<String>, index: Int) {
+        if (arrayData.size > 9) {
+            var data: LineData = mainLineChart.getData()
+            if (data == null) {
+                data = LineData()
+                mainLineChart.data = data
+            }
+            var set1 = data.getDataSetByIndex(0)
+            var set2 = data.getDataSetByIndex(1)
+            var set3 = data.getDataSetByIndex(2)
+            var set4 = data.getDataSetByIndex(3)
+            var set5 = data.getDataSetByIndex(4)
+            var set6 = data.getDataSetByIndex(5)
+            var set7 = data.getDataSetByIndex(6)
+            var set8 = data.getDataSetByIndex(7)
 
-                                var startYear = Integer.parseInt(readData[32], 16)
-                                var startMoon =  BinaryChange.hex2Decimal(readData[33],2)
-                                var startDay = BinaryChange.hex2Decimal(readData[34], 2)
-                                var startHour = BinaryChange.hex2Decimal(readData[35], 2)
-                                var startDivide = BinaryChange.hex2Decimal(readData[36], 2)
-                                var startSecond = BinaryChange.hex2Decimal(readData[37], 2)
-
-                                var endYear = Integer.parseInt(readData[38], 16)
-                                var endMoon = BinaryChange.hex2Decimal(readData[39], 2)
-                                var endDay = BinaryChange.hex2Decimal(readData[40], 2)
-                                var endHour = BinaryChange.hex2Decimal(readData[41], 2)
-                                var endDivide = BinaryChange.hex2Decimal(readData[42], 2)
-                                var endSecond = BinaryChange.hex2Decimal(readData[43], 2)
-                                var startTime = "20$startYear-$startMoon-$startDay $startHour:$startDivide:$startSecond"
-                                var endTime = "20$endYear-$endMoon-$endDay $endHour:$endDivide:$endSecond"
-
-                                SettingActivity.actionStart(this@MainActivity,dcVoltage,exVoltage,dcCurrent,exCurrent,offOnState,
-                                    gatherTime, offTine, gatherLaterTime, onTime, onLater,backTime, startTime, endTime)//, startTime, endTime
-                            }
-                        }
-                    }
-                    if (readData[0] == "A2" && readData.size == 3) {
-                        //激活命令回传报文
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                            if (readData[1]=="01"){
-                                LogUtil.e("TAG","配置成功")
-                                SettingActivity().finishActivity()
-                            }else if (readData[1]=="00"){
-                                "配置失败".showToast(this@MainActivity)
-                            }
-                        }
-                    }
-                    if (readData[0] == "A3" && readData.size == 9) {
-                        //激活命令回传报文
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                            if (readData[1]=="01"){
-                                "校准成功".showToast(this@MainActivity)
-                            }else if (readData[1]=="00"){
-                                "校准失败".showToast(this@MainActivity)
-                            }
-                        }
-                    }
-                }
+            if (set1 == null) {
+                set1 = createSet(getColor(R.color.color_bg_selected))
+                data.addDataSet(set1)
+            }
+            if (set2 == null) {
+                set2 = createSet(getColor(R.color.color_bg_selected_big))
+                data.addDataSet(set2)
+            }
+            if (set3 == null) {
+                set3 = createSet(getColor(R.color.greenyellow))
+                data.addDataSet(set3)
+            }
+            if (set4 == null) {
+                set4 = createSet(getColor(R.color.red))
+                data.addDataSet(set4)
+            }
+            if (set5 == null) {
+                set5 = createSet(getColor(R.color.btn_stop_order))
+                data.addDataSet(set5)
+            }
+            if (set6 == null) {
+                set6 = createSet(getColor(R.color.burlywood))
+                data.addDataSet(set6)
+            }
+            if (set7 == null) {
+                set7 = createSet(getColor(R.color.text_green))
+                data.addDataSet(set7)
+            }
+            if (set8 == null) {
+                set8 = createSet(getColor(R.color.magenta))
+                data.addDataSet(set8)
             }
 
-            override fun readCallBackMessgae(state: String) {
-                LogUtil.e("TAG", state)
+            if (selectList[0]) {
+                val offDirectCurrent = java.lang.Float.valueOf(arrayData[1])
+                set1.addEntry(Entry(index.toFloat(), offDirectCurrent))
+                lineData.addDataSet(set1)
             }
-        })
+            if (selectList[1]) {
+                val offDirectVoltage = java.lang.Float.valueOf(arrayData[2])
+                set2.addEntry(Entry(index.toFloat(), offDirectVoltage))
+                lineData.addDataSet(set2)
+            }
+            if (selectList[2]) {
+                val offExchangeCurrent = java.lang.Float.valueOf(arrayData[3])
+                set3.addEntry(Entry(index.toFloat(), offExchangeCurrent))
+                lineData.addDataSet(set3)
+            }
+            if (selectList[3]) {
+                val offExchangeVoltage = java.lang.Float.valueOf(arrayData[4])
+                set4.addEntry(Entry(index.toFloat(), offExchangeVoltage))
+                lineData.addDataSet(set4)
+            }
+            if (selectList[4]) {
+                val onDirectCurrent = java.lang.Float.valueOf(arrayData[5])
+                set5.addEntry(Entry(index.toFloat(), onDirectCurrent))
+                lineData.addDataSet(set5)
+            }
+            if (selectList[5]) {
+                val onDirectVoltage = java.lang.Float.valueOf(arrayData[6])
+                set6.addEntry(Entry(index.toFloat(), onDirectVoltage))
+                lineData.addDataSet(set6)
+            }
+            if (selectList[6]) {
+                val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
+                set7.addEntry(Entry(index.toFloat(), onExchangeCurrent))
+                lineData.addDataSet(set7)
+            }
+            if (selectList[7]) {
+                val onExchangeVoltage = java.lang.Float.valueOf(arrayData[8])
+                set8.addEntry(Entry(index.toFloat(), onExchangeVoltage))
+                lineData.addDataSet(set8)
+            }
+            mainLineChart.data = lineData
+            mainLineChart.data.notifyDataChanged()
+            mainLineChart.notifyDataSetChanged()
+            mainLineChart.invalidate()
+        }
+    }
+
+    private fun createSet(color: Int): LineDataSet? {
+        val set = LineDataSet(null, "DataSet 1")
+        set.color = color
+        set.setDrawValues(false)
+        set.setDrawCircles(false)
+        return set
     }
 
     private fun tabLayoutSelect() {
@@ -238,25 +360,26 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     }
                     context.resources.getString(R.string.aline_time) -> {
                         var currentTime = BleTimeData.timeDateToHex(SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(BaseDateUtil.getCurrentTime()))
-                        writeHandData(BleDataMake.alineTime(currentTime))
+                        BleConstant.startWrite(BleDataMake.alineTime(currentTime))
                         tbLayout.selectTab(tbLayout.getTabAt(0))
                     }
                     context.resources.getString(R.string.save_data) -> {
-                        DialogUtil().saveDataDialog(this@MainActivity, object:DialogSaveDataCallBack{
+                        DialogUtil().saveDataDialog(this@MainActivity, object : DialogSaveDataCallBack {
                             override fun cancelCallBack() {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
                             }
 
-                            override fun sureCallBack(saveName:String) {
+                            override fun sureCallBack(saveName: String) {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
-                                LogUtil.e("TAG",saveName)
-                                LogUtil.e("TAG",BinaryChange.encode(saveName))
+                                LogUtil.e("TAG", saveName)
+                                LogUtil.e("TAG", BinaryChange.encode(saveName))
                             }
 
                         })
                     }
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
@@ -269,8 +392,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 drawer_layout.openDrawer(GravityCompat.START)
             }
             R.id.linSetting -> {
-                //注册成功开始读取数据
-                writeHandData(BleDataMake.readSetting())
+                BleConstant.startWrite(BleDataMake.readSetting())
             }
             R.id.linVersionCheck -> {
                 VersionCheck.versionInfo(version, versionInfoPresenter)
@@ -316,10 +438,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun setRegisterInfo(registerBean: RegisterBean) {
-        if (registerBean.state==200){
-//            var registerCode = "BEB0${registerBean.activationCode}"
-//            registerCode = "$registerCode${BinaryChange.HexStringToBytes(registerCode)}"
-            writeHandData(BleDataMake.encryHandData(registerBean.activationCode))
+        if (registerBean.state == 200) {
+            BleConstant.startWrite(BleDataMake.encryHandData(registerBean.activationCode))
         }
     }
 

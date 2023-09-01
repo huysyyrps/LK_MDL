@@ -2,6 +2,7 @@ package com.example.lkmdl.util.dialog
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.le.ScanResult
 import android.os.Build
 import android.util.Log
@@ -20,6 +21,7 @@ import com.example.lkmdl.util.ble.BleConnectCallBack
 import com.example.lkmdl.util.ble.BleContent
 import com.example.lkmdl.util.ble.BleScanAndConnectCallBack
 import com.example.lkmdl.util.ble.BleScanCallBack
+import com.example.lkmdl.util.ble.blenew.BleConstant
 import com.example.lkmdl.util.showToast
 import com.permissionx.guolindev.PermissionX
 import kotlinx.android.synthetic.main.activity_read_file.recyclerView
@@ -148,7 +150,7 @@ class DialogUtil {
     /**
      * 初始化扫描dialog
      */
-    fun initProgressDialog(activity: MainActivity): MaterialDialog {
+    fun initProgressDialog(activity: Activity): MaterialDialog {
         dialog = MaterialDialog(activity)
             .cancelable(false)
             .show {
@@ -161,6 +163,32 @@ class DialogUtil {
                 cornerRadius(16f)
             }
         return dialog
+    }
+
+    /**
+     * 扫描弹窗
+     */
+    fun ScanConnectAgainDialog(activity: Activity, title: String) {
+        dialog = MaterialDialog(activity)
+            .cancelable(false)
+            .show {
+                customView(    //自定义弹窗
+                    viewRes = R.layout.dialog_scan_again,//自定义文件
+                    dialogWrapContent = true,    //让自定义宽度生效
+                    scrollable = true,            //让自定义宽高生效
+                    noVerticalPadding = true    //让自定义高度生效
+                )
+                cornerRadius(16f)
+            }
+        dialog.etWorkPipe.text = title
+
+        dialog.btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.btnSure.setOnClickListener {
+            dialog.dismiss()
+            BleConstant.scanAndConnect(activity)
+        }
     }
 
 

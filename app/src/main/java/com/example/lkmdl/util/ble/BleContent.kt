@@ -156,21 +156,21 @@ object BleContent {
             onCharacteristicNotifyDataListener
         )
         //设置描述数据读取回调
-        bleConnectorInstance.setOnDescriptorReadDataListener(onDescriptorReadDataListener)
+//        bleConnectorInstance.setOnDescriptorReadDataListener(onDescriptorReadDataListener)
         //设置描述数据写入回调（写入数据成功时才有回调）
-        bleConnectorInstance.setOnDescriptorWriteDataListener(onDescriptorWriteDataListener)
+//        bleConnectorInstance.setOnDescriptorWriteDataListener(onDescriptorWriteDataListener)
         //设置可靠数据写入完成的回调（需要设备端也支持可靠数据相关的流程）
-        bleConnectorInstance.setOnReliableWriteCompletedListener(onReliableWriteCompletedListener)
+//        bleConnectorInstance.setOnReliableWriteCompletedListener(onReliableWriteCompletedListener)
         //设置读取设备信号强度回调
-        bleConnectorInstance.setOnReadRemoteRssiListener(onReadRemoteRssiListener)
+//        bleConnectorInstance.setOnReadRemoteRssiListener(onReadRemoteRssiListener)
         //设置MTU(数据传输大小)变更的回调
-        bleConnectorInstance.setOnMtuChangedListener(onMtuChangedListener)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //设置物理层读取的回调
-            bleConnectorInstance.setOnPhyReadListener(onPhyReadListener)
-            //设置物理层变更的回调
-            bleConnectorInstance.setOnPhyUpdateListener(onPhyUpdateListener)
-        }
+//        bleConnectorInstance.setOnMtuChangedListener(onMtuChangedListener)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            //设置物理层读取的回调
+//            bleConnectorInstance.setOnPhyReadListener(onPhyReadListener)
+//            //设置物理层变更的回调
+//            bleConnectorInstance.setOnPhyUpdateListener(onPhyUpdateListener)
+//        }
         bleConnectorInstance.connect(
             scanResult.device,
             false,

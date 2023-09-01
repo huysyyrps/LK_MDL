@@ -53,6 +53,24 @@ object BleDataMake {
     }
 
     /**
+     * 读取设备数据
+     */
+    fun readFile(s: String):String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.READFILR}${CharacteristicUuid.READFILRTAG}$s"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+
+    /**
+     * 读取实时数据
+     */
+    fun readRealTime():String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMECODE}"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+
+    /**
      * 授权
      */
     fun  makeEmpowerData(deviceDate:String, activatCode:String):String{

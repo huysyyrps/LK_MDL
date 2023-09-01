@@ -38,7 +38,6 @@ object ReadLocalFile {
                 e.printStackTrace()
                 callBack.fileCallbackFaile(e.toString())
             }
-            LogUtil.e("TAG","${listData.size}")
         }
     }
 }

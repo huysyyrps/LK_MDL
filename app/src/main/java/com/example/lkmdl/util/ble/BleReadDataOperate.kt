@@ -33,10 +33,10 @@ object BleReadDataOperate {
                 gson.toJson(params)
             )
             registerPresenter.getRegisterInfo(requestBody)
-        } else if (readData[1] == "01") {
-            LogUtil.e("TAG", MyApplication.context.resources.getString(R.string.has_register))
+        }
+//        else if (readData[1] == "01") {
             //注册成功开始读取数据
 //            MainActivity().writeHandData("BEA15F")
-        }
+//        }
     }
 }

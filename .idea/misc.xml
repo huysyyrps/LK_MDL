@@ -3,12 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_main.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_read_file.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_setting.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_config_option.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower_error.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_item_header.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_phone.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_save_data.xml" value="0.2609375" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_scan_again.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/progress_dialog.xml" value="0.24048913043478262" />
       </map>
     </option>
   </component>
