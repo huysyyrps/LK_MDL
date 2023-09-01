@@ -12,6 +12,7 @@ import com.example.lkmdl.MyApplication.Companion.context
 import com.example.lkmdl.R
 import com.example.lkmdl.util.*
 import com.example.lkmdl.util.ble.*
+import com.example.lkmdl.util.ble.blenew.BleConstant
 import com.example.lkmdl.util.dialog.DialogCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.example.lkmdl.util.file_util.ReadFileCallBack
@@ -19,7 +20,6 @@ import com.example.lkmdl.util.file_util.ReadLocalFile
 import com.example.lkmdl.util.time_picker.BaseTimePicker
 import com.example.lkmdl.util.time_picker.BaseTimePickerImp
 import com.example.lkmdl.view.PopupMenu
-import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -28,7 +28,7 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-class ReadFileActivity : BaseActivity(), View.OnClickListener {
+class LocalFileActivity : BaseActivity(), View.OnClickListener{
     var selectIndex = 0
     private var pathList = ArrayList<String>()
     private lateinit var adapter: FileListAdapter
@@ -54,11 +54,11 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
 
     var fileList = ArrayList<String>()
     var hexFileList = mutableListOf<String>()
-    var compdata = ""
+    var dataNum = 0F
 
     companion object {
         fun actionStart(context: Context) {
-            val intent = Intent(context, ReadFileActivity::class.java)
+            val intent = Intent(context, LocalFileActivity::class.java)
             context.startActivity(intent)
         }
     }
@@ -68,7 +68,6 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_file)
         readHeader.setActivity(this)
-        linRight.setOnClickListener(this)
         btnOption.setOnClickListener(this)
         ivSelectTiem.setOnClickListener(this)
         ivSelectTiemClose.setOnClickListener(this)
@@ -121,7 +120,7 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun fileCallbackFaile(messahe: String) {
-                messahe.showToast(this@ReadFileActivity)
+                messahe.showToast(this@LocalFileActivity)
             }
         })
     }
@@ -301,103 +300,110 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
         return false
     }
 
-    //写入数据
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun writeHandData(makeHandData: String) {
-        BleContent.writeData(
-            makeHandData,
-            CharacteristicUuid.ConstantCharacteristicUuid, object : BleWriteCallBack {
-                override fun writeCallBack(writeBackData: String) {
-                    ReadData()
-                }
-            })
-    }
+    private fun addEntry(arrayData: Array<String>) {
 
-    //读取数据
-    fun ReadData() {
-        BleContent.readData(CharacteristicUuid.ConstantCharacteristicUuid, object : BleReadCallBack {
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun readCallBackSuccess(readData: Array<String>, stringData: String) {
-                if (readData.isNotEmpty()) {
-                    if (readData[0] == "A5" && readData.size == 24) {
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)
-                        ) {
-                            var fileNum = Integer.parseInt(readData[1], 16)
-                            if (fileNum == 0) {
-                                linNoData.visibility = View.VISIBLE
-                                linData.visibility = View.GONE
-                                return
-                            } else {
-                                linNoData.visibility = View.GONE
-                                linData.visibility = View.VISIBLE
-                                for (i in 0 until fileNum) {
-                                    var fileName = BinaryChange.hexStr2Str(stringData.substring(6, 44))
-                                    fileList.add(fileName)
-                                    hexFileList.add(stringData.substring(6, 44))
-                                }
-                                selectIndex = 0
-                                adapter = FileListAdapter(fileList, selectIndex, this@ReadFileActivity, object : AdapterPositionCallBack {
-                                    override fun backPosition(index: Int) {
-                                        selectIndex = index
-                                        writeHandData(BleDataMake.readFile(hexFileList[selectIndex]))
-                                    }
-                                })
-                                adapter.notifyDataSetChanged()
-                                recyclerView.adapter = adapter
-                                recyclerView.invalidate()
-                                if (fileList.isNotEmpty()) {
-                                    writeHandData(BleDataMake.readFile(hexFileList[0]))
-                                }
-                            }
-                        }
-                    }
-                    if (readData[0] == "A6" && readData.size == 124) {
-                        if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                            == stringData.substring(stringData.length - 2, stringData.length)) {
-                            compdata = stringData.substring(6, 246)
-//                            addEntry(compdata)
-                            var s = BinaryChange.hexStr2Str(compdata)
-                            LogUtil.e("TAG",s)
-                        }
-                    }
-                }
-
-
+        if (arrayData.size >= 9) {
+            var data = lineChart.data
+            if (data == null) {
+                data = LineData()
+                lineChart.data = data
             }
 
-            override fun readCallBackMessgae(state: String) {
-                LogUtil.e("TAG", state)
-            }
-        })
-    }
+            var set1 = data.getDataSetByIndex(0)
+            var set2 = data.getDataSetByIndex(1)
+            var set3 = data.getDataSetByIndex(2)
+            var set4 = data.getDataSetByIndex(3)
+            var set5 = data.getDataSetByIndex(4)
+            var set6 = data.getDataSetByIndex(5)
+            var set7 = data.getDataSetByIndex(6)
+            var set8 = data.getDataSetByIndex(7)
 
-    private fun addEntry(compdata: String) {
-        var data: LineData = lineChart.data
-        if (data == null) {
-            data = LineData()
+            if (set1 == null) {
+                set1 = createSet(getColor(R.color.color_bg_selected))
+                data.addDataSet(set1)
+            }
+            if (set2 == null) {
+                set2 = createSet(getColor(R.color.color_bg_selected_big))
+                data.addDataSet(set2)
+            }
+            if (set3 == null) {
+                set3 = createSet(getColor(R.color.greenyellow))
+                data.addDataSet(set3)
+            }
+            if (set4 == null) {
+                set4 = createSet(getColor(R.color.red))
+                data.addDataSet(set4)
+            }
+            if (set5 == null) {
+                set5 = createSet(getColor(R.color.btn_stop_order))
+                data.addDataSet(set5)
+            }
+            if (set6 == null) {
+                set6 = createSet(getColor(R.color.burlywood))
+                data.addDataSet(set6)
+            }
+            if (set7 == null) {
+                set7 = createSet(getColor(R.color.text_green))
+                data.addDataSet(set7)
+            }
+            if (set8 == null) {
+                set8 = createSet(getColor(R.color.magenta))
+                data.addDataSet(set8)
+            }
+
+            val offDirectCurrent = java.lang.Float.valueOf(arrayData[1])
+            set1.addEntry(Entry(dataNum, offDirectCurrent))
+            val offDirectVoltage = java.lang.Float.valueOf(arrayData[2])
+            set2.addEntry(Entry(dataNum, offDirectVoltage))
+            val offExchangeCurrent = java.lang.Float.valueOf(arrayData[3])
+            set3.addEntry(Entry(dataNum, offExchangeCurrent))
+            val offExchangeVoltage = java.lang.Float.valueOf(arrayData[4])
+            set4.addEntry(Entry(dataNum, offExchangeVoltage))
+            val onDirectCurrent = java.lang.Float.valueOf(arrayData[5])
+            set5.addEntry(Entry(dataNum, onDirectCurrent))
+            val onDirectVoltage = java.lang.Float.valueOf(arrayData[6])
+            set6.addEntry(Entry(dataNum, onDirectVoltage))
+            val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
+            set7.addEntry(Entry(dataNum, onExchangeCurrent))
+            val onExchangeVoltage = java.lang.Float.valueOf(arrayData[8])
+            set8.addEntry(Entry(dataNum, onExchangeVoltage))
+            dataNum++
+
+            if (selectList[0]) {
+                data.addDataSet(set1)
+            }
+            if (selectList[1]) {
+                data.addDataSet(set2)
+            }
+            if (selectList[2]) {
+                data.addDataSet(set3)
+            }
+            if (selectList[3]) {
+                data.addDataSet(set4)
+            }
+            if (selectList[4]) {
+                data.addDataSet(set5)
+            }
+            if (selectList[5]) {
+                data.addDataSet(set6)
+            }
+            if (selectList[6]) {
+                data.addDataSet(set7)
+            }
+            if (selectList[7]) {
+                data.addDataSet(set8)
+            }
+
             lineChart.data = data
+            lineChart.data.notifyDataChanged()
+            lineChart.notifyDataSetChanged()
+            lineChart.invalidate()
         }
-        var set = data.getDataSetByIndex(0)
-        if (set == null) {
-            set = createSet()
-            data.addDataSet(set)
-        }
-
-        val randomDataSetIndex = (Math.random() * data.dataSetCount).toInt()
-        val randomSet = data.getDataSetByIndex(randomDataSetIndex)
-        val value = (Math.random() * 50).toFloat() + 50f * (randomDataSetIndex + 1)
-        data.addEntry(Entry(randomSet.entryCount.toFloat(), value), randomDataSetIndex)
-        data.notifyDataChanged()
-
-        lineChart.notifyDataSetChanged()
-        lineChart.setVisibleXRangeMaximum(6f)
-        lineChart.moveViewTo((data.entryCount - 7).toFloat(), 50f, AxisDependency.LEFT)
     }
 
-    private fun createSet(): LineDataSet? {
+    private fun createSet(color: Int): LineDataSet? {
         offDirectCurrentSet = LineDataSet(entriesOffDirectCurrent, "")
-        offDirectCurrentSet?.color = getColor(R.color.color_bg_selected) //设置线的颜色
+        offDirectCurrentSet?.color = color //设置线的颜色
         //不绘制数据
         offDirectCurrentSet?.setDrawValues(false)
         //不绘制圆形指示器
@@ -409,21 +415,6 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.linRight -> {
-                PopupMenu.showPopupMenu(linRight, "Desc", this, object : PopupMenuCallBack {
-                    override fun projectBack() {
-                        fileList.clear()
-                        lineChart.clear()
-                        selectList = mutableListOf<Boolean>(true, false, false, false, false, false, false, false)
-                        writeHandData(BleDataMake.readFileList())
-                    }
-
-                    override fun localBack() {
-                        selectList = mutableListOf<Boolean>(true, false, false, false, false, false, false, false)
-                        getFileList()
-                    }
-                })
-            }
             R.id.ivSelectTiem -> {
                 linSelectTime.visibility = View.VISIBLE
                 ivSelectTiem.visibility = View.GONE
@@ -437,7 +428,6 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
             R.id.btnOption -> {
                 DialogUtil().ConfigOptionDialog(this, selectList, object : DialogCallBack {
                     override fun callBack(backList: MutableList<Boolean>) {
-                        LogUtil.e("TAG", backList.toString())
                         selectList = backList
                         initDataChart()
                         lineChart.fitScreen()
@@ -472,4 +462,58 @@ class ReadFileActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     *   override fun callBackSetting(readData: Array<String>, stringData: String) {
+    //    }
+    //
+    //    override fun callBackFile(readData: Array<String>, stringData: String) {
+    //        if (readData.isNotEmpty()) {
+    //            if (readData[0] == "A5" && readData.size == 24) {
+    //                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+    //                    == stringData.substring(stringData.length - 2, stringData.length)
+    //                ) {
+    //                    var fileNum = Integer.parseInt(readData[1], 16)
+    //                    if (fileNum == 0) {
+    //                        linNoData.visibility = View.VISIBLE
+    //                        linData.visibility = View.GONE
+    //                        return
+    //                    } else {
+    //                        linNoData.visibility = View.GONE
+    //                        linData.visibility = View.VISIBLE
+    //                        for (i in 0 until fileNum) {
+    //                            var fileName = BinaryChange.hexStr2Str(stringData.substring(6, 44))
+    //                            fileList.add(fileName)
+    //                            hexFileList.add(stringData.substring(6, 44))
+    //                        }
+    //                        selectIndex = 0
+    //                        adapter = FileListAdapter(fileList, selectIndex, this@LocalFileActivity, object : AdapterPositionCallBack {
+    //                            override fun backPosition(index: Int) {
+    //                                dataNum = 0F
+    //                                selectIndex = index
+    //                                BleConstant.startWrite(BleDataMake.readFile(hexFileList[selectIndex]))
+    //                            }
+    //                        })
+    //                        adapter.notifyDataSetChanged()
+    //                        recyclerView.adapter = adapter
+    //                        recyclerView.invalidate()
+    //                        if (fileList.isNotEmpty()) {
+    //                            BleConstant.startWrite(BleDataMake.readFile(hexFileList[0]))
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            if (readData[0] == "A6" && readData.size == 124) {
+    //                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+    //                    == stringData.substring(stringData.length - 2, stringData.length)) {
+    ////                    compdata = stringData.substring(6, 246)
+    ////                    addEntry(compdata)
+    ////                    var s = BinaryChange.hexStr2Str(compdata)
+    //                    var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
+    //                    val arrayData = itemData.split(",").toTypedArray()
+    //                    addEntry(arrayData)
+    //                }
+    //            }
+    //        }
+    //    }
+     */
 }

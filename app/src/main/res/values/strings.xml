@@ -21,6 +21,8 @@
     <string name="ex_current">交流电流测量</string>
     <string name="on_off_measure">通断测量</string>
 
+    <string name="start">开始</string>
+    <string name="stop">停止</string>
     <string name="main">主页</string>
     <string name="save">保存</string>
 
@@ -90,5 +92,7 @@
     <string name="has_register">已注册</string>
 
     <string name="save_data">保存文件名</string>
+    <string name="project_file">设备文件</string>
+    <string name="local_file">本地文件</string>
 
 </resources>

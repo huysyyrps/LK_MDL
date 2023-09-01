@@ -147,16 +147,19 @@ object BleConstant {
                     // 打开通知后，设备发过来的数据将在这里出现
                     var stringData = BinaryChange.ByteToString(data)
                     var arrayData = BinaryChange.hexStringToByte(stringData)
-                    callBack?.backData(arrayData,stringData)
                     if (stringData.startsWith("A2")){
-                        settingCallBack?.callBack(arrayData,stringData)
+                        settingCallBack?.callBackSetting(arrayData,stringData)
+                    }else if (stringData.startsWith("A5")||stringData.startsWith("A6")){
+                        settingCallBack?.callBackFile(arrayData,stringData)
+                    }else{
+                        callBack?.backData(arrayData,stringData)
                     }
-//                    MainActivity().ReadData(arrayData, stringData)
                 }
             })
     }
 
     interface ReadCallBack {
-        fun callBack(readData: Array<String>, stringData: String)
+        fun callBackSetting(readData: Array<String>, stringData: String)
+        fun callBackFile(readData: Array<String>, stringData: String)
     }
 }

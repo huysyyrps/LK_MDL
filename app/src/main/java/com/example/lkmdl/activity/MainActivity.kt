@@ -19,9 +19,13 @@ import com.example.lkmdl.presenter.RegisterPresenter
 import com.example.lkmdl.presenter.VersionInfoPresenter
 import com.example.lkmdl.util.*
 import com.example.lkmdl.util.apk_updata.VersionCheck
-import com.example.lkmdl.util.ble.*
+import com.example.lkmdl.util.ble.BinaryChange
+import com.example.lkmdl.util.ble.BleDataMake
+import com.example.lkmdl.util.ble.BleReadDataOperate
+import com.example.lkmdl.util.ble.BleTimeData
 import com.example.lkmdl.util.ble.blenew.BleBackDataCallBack
 import com.example.lkmdl.util.ble.blenew.BleConstant
+import com.example.lkmdl.util.dialog.DialogCallBack
 import com.example.lkmdl.util.dialog.DialogSaveDataCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.github.mikephil.charting.data.Entry
@@ -29,6 +33,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_read_file.*
 import java.text.SimpleDateFormat
 
 
@@ -70,7 +75,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 
 
     private val tabItemStr = arrayListOf<String>().apply {
-        add(context.resources.getString(R.string.main))
+        add(context.resources.getString(R.string.start))
+        add(context.resources.getString(R.string.stop))
         add(context.resources.getString(R.string.save))
         add(context.resources.getString(R.string.aline_time))
         add(context.resources.getString(R.string.save_data))
@@ -88,9 +94,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             tab.text = value
             tbLayout.addTab(tab, index, false)
         }
-        tbLayout.selectTab(tbLayout.getTabAt(0))
+//        tbLayout.selectTab(tbLayout.getTabAt(0))
         //tabLayout选择监听
         tabLayoutSelect()
+
+        LineChartSetting().SettingLineChart(mainLineChart, true)
 
 //        BleBackDataRead.BleBackDataContext(this)
         if (!bluetoothAdapter.isEnabled) {
@@ -116,7 +124,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         linSetting.setOnClickListener(this)
         linVersionCheck.setOnClickListener(this)
         linContactComp.setOnClickListener(this)
-        linFileList.setOnClickListener(this)
+        linLocalFile.setOnClickListener(this)
+        linProjectFile.setOnClickListener(this)
+        btnMainOption.setOnClickListener(this)
+        ivMainTiem.setOnClickListener(this)
+        ivMainTiemClose.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
     }
@@ -164,10 +176,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 }
             }
             //读取当前正在运行的配置命令回传报文帧头
-            if (readData[0] == "A1" && readData.size == 47) {
+            if (readData[0] == "A1" && readData.size == 67) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
                     == stringData.substring(stringData.length - 2, stringData.length)) {
-                    var offOn = Integer.toBinaryString(Integer.parseInt(readData[21], 16))
+                    var offOn = Integer.toBinaryString(Integer.parseInt(readData[41], 16))
                     while (offOn.length < 5) {
                         offOn = "0$offOn"
                     }
@@ -177,26 +189,26 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                         dcCurrent = offOn.substring(2, 3).toInt()
                         exCurrent = offOn.substring(3, 4).toInt()
                         offOnState = offOn.substring(4, 5).toInt()
-                        gatherTime = Integer.parseInt("${readData[23]}${readData[22]}", 16)
-                        offTine = Integer.parseInt("${readData[25]}${readData[24]}", 16)
-                        gatherLaterTime = Integer.parseInt("${readData[27]}${readData[26]}", 16)
-                        onTime = Integer.parseInt("${readData[29]}${readData[28]}", 16)
-                        onLater = Integer.parseInt("${readData[31]}${readData[30]}", 16)
-                        backTime = Integer.parseInt("${readData[45]}${readData[44]}", 16)
+                        gatherTime = Integer.parseInt("${readData[43]}${readData[42]}", 16)
+                        offTine = Integer.parseInt("${readData[45]}${readData[44]}", 16)
+                        gatherLaterTime = Integer.parseInt("${readData[47]}${readData[46]}", 16)
+                        onTime = Integer.parseInt("${readData[49]}${readData[48]}", 16)
+                        onLater = Integer.parseInt("${readData[51]}${readData[50]}", 16)
+                        backTime = Integer.parseInt("${readData[65]}${readData[64]}", 16)
 
-                        startYear = Integer.parseInt(readData[32], 16)
-                        startMoon = BinaryChange.hex2Decimal(readData[33], 2)
-                        startDay = BinaryChange.hex2Decimal(readData[34], 2)
-                        startHour = BinaryChange.hex2Decimal(readData[35], 2)
-                        startDivide = BinaryChange.hex2Decimal(readData[36], 2)
-                        startSecond = BinaryChange.hex2Decimal(readData[37], 2)
+                        startYear = Integer.parseInt(readData[52], 16)
+                        startMoon = BinaryChange.hex2Decimal(readData[53], 2)
+                        startDay = BinaryChange.hex2Decimal(readData[54], 2)
+                        startHour = BinaryChange.hex2Decimal(readData[55], 2)
+                        startDivide = BinaryChange.hex2Decimal(readData[56], 2)
+                        startSecond = BinaryChange.hex2Decimal(readData[57], 2)
 
-                        endYear = Integer.parseInt(readData[38], 16)
-                        endMoon = BinaryChange.hex2Decimal(readData[39], 2)
-                        endDay = BinaryChange.hex2Decimal(readData[40], 2)
-                        endHour = BinaryChange.hex2Decimal(readData[41], 2)
-                        endDivide = BinaryChange.hex2Decimal(readData[42], 2)
-                        endSecond = BinaryChange.hex2Decimal(readData[43], 2)
+                        endYear = Integer.parseInt(readData[58], 16)
+                        endMoon = BinaryChange.hex2Decimal(readData[59], 2)
+                        endDay = BinaryChange.hex2Decimal(readData[60], 2)
+                        endHour = BinaryChange.hex2Decimal(readData[61], 2)
+                        endDivide = BinaryChange.hex2Decimal(readData[62], 2)
+                        endSecond = BinaryChange.hex2Decimal(readData[63], 2)
                     }
                     var startTime = "20$startYear-$startMoon-$startDay $startHour:$startDivide:$startSecond"
                     var endTime = "20$endYear-$endMoon-$endDay $endHour:$endDivide:$endSecond"
@@ -232,11 +244,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     }
                 }
             }
-
+            //读取实时数据
             if (readData[0] == "A7" && readData.size == 124) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)
-                ) {
+                    == stringData.substring(stringData.length - 2, stringData.length)) {
                     var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
                     val arrayData = itemData.split(",").toTypedArray()
                     setEntry(arrayData, index)
@@ -247,8 +258,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     }
 
     private fun setEntry(arrayData: Array<String>, index: Int) {
-        if (arrayData.size > 9) {
-            var data: LineData = mainLineChart.getData()
+        if (arrayData.size >= 9) {
+            var data = mainLineChart.getData()
             if (data == null) {
                 data = LineData()
                 mainLineChart.data = data
@@ -263,87 +274,99 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             var set8 = data.getDataSetByIndex(7)
 
             if (set1 == null) {
-                set1 = createSet(getColor(R.color.color_bg_selected))
+                set1 = createSet(getColor(R.color.color_bg_selected),getString(R.string.off_direct_current))
                 data.addDataSet(set1)
             }
             if (set2 == null) {
-                set2 = createSet(getColor(R.color.color_bg_selected_big))
+                set2 = createSet(getColor(R.color.color_bg_selected_big), getString(R.string.off_direct_voltage))
                 data.addDataSet(set2)
             }
             if (set3 == null) {
-                set3 = createSet(getColor(R.color.greenyellow))
+                set3 = createSet(getColor(R.color.greenyellow), getString(R.string.off_ac_current))
                 data.addDataSet(set3)
             }
             if (set4 == null) {
-                set4 = createSet(getColor(R.color.red))
+                set4 = createSet(getColor(R.color.red), getString(R.string.off_ac_voltage))
                 data.addDataSet(set4)
             }
             if (set5 == null) {
-                set5 = createSet(getColor(R.color.btn_stop_order))
+                set5 = createSet(getColor(R.color.btn_stop_order), getString(R.string.on_direct_current))
                 data.addDataSet(set5)
             }
             if (set6 == null) {
-                set6 = createSet(getColor(R.color.burlywood))
+                set6 = createSet(getColor(R.color.burlywood), getString(R.string.on_direct_voltage))
                 data.addDataSet(set6)
             }
             if (set7 == null) {
-                set7 = createSet(getColor(R.color.text_green))
+                set7 = createSet(getColor(R.color.text_green), getString(R.string.on_ac_current))
                 data.addDataSet(set7)
             }
             if (set8 == null) {
-                set8 = createSet(getColor(R.color.magenta))
+                set8 = createSet(getColor(R.color.magenta), getString(R.string.on_ac_voltage))
                 data.addDataSet(set8)
             }
 
             if (selectList[0]) {
                 val offDirectCurrent = java.lang.Float.valueOf(arrayData[1])
-                set1.addEntry(Entry(index.toFloat(), offDirectCurrent))
-                lineData.addDataSet(set1)
+//                set1.addEntry(Entry(index.toFloat(), offDirectCurrent))
+//                lineData.addDataSet(set1)
+                data.addEntry(Entry(index.toFloat(), offDirectCurrent), 0)
+            }else{
+                data.removeDataSet(0)
             }
             if (selectList[1]) {
                 val offDirectVoltage = java.lang.Float.valueOf(arrayData[2])
-                set2.addEntry(Entry(index.toFloat(), offDirectVoltage))
-                lineData.addDataSet(set2)
+                data.addEntry(Entry(index.toFloat(), offDirectVoltage), 1)
+            }else{
+                data.removeDataSet(1)
             }
             if (selectList[2]) {
                 val offExchangeCurrent = java.lang.Float.valueOf(arrayData[3])
-                set3.addEntry(Entry(index.toFloat(), offExchangeCurrent))
-                lineData.addDataSet(set3)
+                data.addEntry(Entry(index.toFloat(), offExchangeCurrent), 2)
+            }else{
+                data.removeDataSet(2)
             }
             if (selectList[3]) {
                 val offExchangeVoltage = java.lang.Float.valueOf(arrayData[4])
-                set4.addEntry(Entry(index.toFloat(), offExchangeVoltage))
-                lineData.addDataSet(set4)
+                data.addEntry(Entry(index.toFloat(), offExchangeVoltage), 3)
+            }else{
+                data.removeDataSet(3)
             }
             if (selectList[4]) {
                 val onDirectCurrent = java.lang.Float.valueOf(arrayData[5])
-                set5.addEntry(Entry(index.toFloat(), onDirectCurrent))
-                lineData.addDataSet(set5)
+                data.addEntry(Entry(index.toFloat(), onDirectCurrent), 4)
+            }else{
+                data.removeDataSet(4)
             }
             if (selectList[5]) {
                 val onDirectVoltage = java.lang.Float.valueOf(arrayData[6])
-                set6.addEntry(Entry(index.toFloat(), onDirectVoltage))
-                lineData.addDataSet(set6)
+                data.addEntry(Entry(index.toFloat(), onDirectVoltage), 5)
+            }else{
+                data.removeDataSet(5)
             }
             if (selectList[6]) {
                 val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
-                set7.addEntry(Entry(index.toFloat(), onExchangeCurrent))
-                lineData.addDataSet(set7)
+                data.addEntry(Entry(index.toFloat(), onExchangeCurrent), 6)
+            }else{
+                data.removeDataSet(6)
             }
             if (selectList[7]) {
                 val onExchangeVoltage = java.lang.Float.valueOf(arrayData[8])
-                set8.addEntry(Entry(index.toFloat(), onExchangeVoltage))
-                lineData.addDataSet(set8)
+                data.addEntry(Entry(index.toFloat(), onExchangeVoltage), 7)
+            }else{
+                data.removeDataSet(7)
             }
-            mainLineChart.data = lineData
-            mainLineChart.data.notifyDataChanged()
+//            mainLineChart.data = lineData
+//            mainLineChart.data.notifyDataChanged()
+            data.notifyDataChanged()
             mainLineChart.notifyDataSetChanged()
             mainLineChart.invalidate()
         }
     }
 
-    private fun createSet(color: Int): LineDataSet? {
-        val set = LineDataSet(null, "DataSet 1")
+    private fun createSet(color: Int, title: String): LineDataSet? {
+        val set = LineDataSet(null, title)
+        set.valueTextColor = color
         set.color = color
         set.setDrawValues(false)
         set.setDrawCircles(false)
@@ -355,7 +378,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab.text) {
-                    context.resources.getString(R.string.main) -> {
+                    context.resources.getString(R.string.start) -> {
+                        BleConstant.startWrite(BleDataMake.readRealStart())
+                    }
+                    context.resources.getString(R.string.stop) -> {
+                        BleConstant.startWrite(BleDataMake.readRealStop())
                     }
                     context.resources.getString(R.string.save) -> {
                     }
@@ -410,8 +437,30 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             R.id.linContactComp -> {
                 BaseTelPhone.telPhone(this)
             }
-            R.id.linFileList -> {
-                ReadFileActivity.actionStart(this)
+            R.id.linLocalFile -> {
+                LocalFileActivity.actionStart(this)
+            }
+            R.id.ivMainTiem -> {
+                linMainTime.visibility = View.VISIBLE
+                ivMainTiem.visibility = View.GONE
+                ivMainTiemClose.visibility = View.VISIBLE
+            }
+            R.id.ivMainTiemClose -> {
+                linMainTime.visibility = View.GONE
+                ivMainTiem.visibility = View.VISIBLE
+                ivMainTiemClose.visibility = View.GONE
+            }
+            R.id.btnMainOption -> {
+                DialogUtil().ConfigOptionDialog(this, selectList, object : DialogCallBack {
+                    override fun callBack(backList: MutableList<Boolean>) {
+                        selectList = backList
+                        mainLineChart.fitScreen()
+                        for (i in 0 until selectList.size){
+
+                        }
+                    }
+
+                })
             }
         }
     }

@@ -18,35 +18,6 @@
                 app:header_is_left_iv_visiable="true"
                 app:header_title="@string/file_list" />
 
-        <LinearLayout
-                android:id="@+id/linRight"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:orientation="horizontal">
-
-            <TextView
-                    android:id="@+id/tv_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="本地数据"
-                    android:textColor="@color/theme_color"
-                    android:textSize="16sp" />
-
-            <ImageView
-                    android:id="@+id/iv_right"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="10dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_other" />
-        </LinearLayout>
     </FrameLayout>
 
     <View

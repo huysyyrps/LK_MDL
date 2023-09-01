@@ -71,10 +71,19 @@ object BleDataMake {
     }
 
     /**
-     * 读取实时数据
+     * 开始读取实时数据
      */
-    fun readRealTime():String{
-        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMECODE}"
+    fun readRealStart():String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMESTARTCODE}"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+
+    /**
+     * 停止读取实时数据
+     */
+    fun readRealStop():String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMESTOPCODE}"
         var checksum = BaseData.hexStringToBytes(data)
         return "$data$checksum"
     }

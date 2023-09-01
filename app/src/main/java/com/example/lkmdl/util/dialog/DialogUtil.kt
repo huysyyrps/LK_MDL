@@ -13,7 +13,7 @@ import com.afollestad.materialdialogs.customview.customView
 import com.example.lkmdl.MyApplication
 import com.example.lkmdl.R
 import com.example.lkmdl.activity.MainActivity
-import com.example.lkmdl.activity.ReadFileActivity
+import com.example.lkmdl.activity.LocalFileActivity
 import com.example.lkmdl.adapter.SelectItemAdapter
 import com.example.lkmdl.util.AdapterSelectCallBack
 import com.example.lkmdl.util.Constant
@@ -41,7 +41,7 @@ class DialogUtil {
      */
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
-    fun ConfigOptionDialog(activity: ReadFileActivity, selectList: MutableList<Boolean>, callBack: DialogCallBack) {
+    fun ConfigOptionDialog(activity: Activity, selectList: MutableList<Boolean>, callBack: DialogCallBack) {
 //        CoroutineScope(Dispatchers.Main)
 //            .launch {
         var vallBackList = mutableListOf<Boolean>()

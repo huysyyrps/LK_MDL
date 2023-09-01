@@ -21,8 +21,8 @@ object CharacteristicUuid {
     const val READFILR = "A6"
     const val READFILRTAG = "01"
     const val REALTIMEDATA = "A7"
-    const val REALTIMECLOSECODE = "00"
-    const val REALTIMECODE = "01"
+    const val REALTIMESTOPCODE = "00"
+    const val REALTIMESTARTCODE = "01"
     const val FILENAMECODE = "A4"
 
     const val METERCODE = "06"

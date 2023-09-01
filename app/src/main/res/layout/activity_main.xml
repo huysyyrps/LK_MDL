@@ -65,10 +65,121 @@
                 android:layout_marginTop="52dp"
                 android:layout_marginRight="2dp"
                 android:orientation="horizontal">
-            <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/mainLineChart"
+            <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
+                <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/mainLineChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:orientation="horizontal">
+
+                    <ImageView
+                            android:id="@+id/ivMainTiem"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_select_time" />
+
+                    <ImageView
+                            android:id="@+id/ivMainTiemClose"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_select_time_close"
+                            android:visibility="gone" />
+
+                    <LinearLayout
+                            android:id="@+id/linMainTime"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="40dp"
+                            android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                                style="@style/BaseButton"
+                                android:visibility="gone"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="10dp">
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:background="@color/theme_color">
+
+                                <com.example.lkmdl.view.BaseButton
+                                        android:id="@+id/btnStartTime"
+                                        style="@style/BaseButton"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:text="@string/start_time"
+                                        android:textColor="@color/white"
+                                        android:layout_margin="0dp"
+                                        android:paddingLeft="15dp"
+                                        app:bg_corner="10dp" />
+
+                                <ImageView
+                                        android:id="@+id/ivRemoveStartTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="15dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:src="@drawable/ic_remove_time" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                        <androidx.cardview.widget.CardView
+                                style="@style/BaseButton"
+                                android:visibility="gone"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                app:cardCornerRadius="10dp">
+
+                            <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:background="@color/theme_color">
+
+                                <com.example.lkmdl.view.BaseButton
+                                        android:id="@+id/btnEndTime"
+                                        style="@style/BaseButton"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="1"
+                                        android:text="@string/end_time"
+                                        android:textColor="@color/white"
+                                        android:layout_margin="0dp"
+                                        android:paddingLeft="15dp"
+                                        app:bg_corner="10dp" />
+
+                                <ImageView
+                                        android:id="@+id/ivRemoveEndTime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="15dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:src="@drawable/ic_remove_time" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <com.example.lkmdl.view.BaseButton
+                                android:id="@+id/btnMainOption"
+                                style="@style/BaseButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/config_option"
+                                android:textColor="@color/white"
+                                app:bg_corner="10dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
 
         </LinearLayout>
     </FrameLayout>
@@ -140,11 +251,21 @@
                 android:layout_height="0.5dp" />
 
         <com.example.lkmdl.view.BaseLinlayout
-                android:id="@+id/linFileList"
+                android:id="@+id/linLocalFile"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                app:drawer_image_left="@drawable/ic_file_list"
-                app:drawer_title="@string/file_list" />
+                app:drawer_image_left="@drawable/ic_local_file"
+                app:drawer_title="@string/local_file" />
+        <View
+                style="@style/HLine"
+                android:layout_height="0.5dp" />
+
+        <com.example.lkmdl.view.BaseLinlayout
+                android:id="@+id/linProjectFile"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:drawer_image_left="@drawable/ic_project_file"
+                app:drawer_title="@string/project_file" />
         <View
                 style="@style/HLine"
                 android:layout_height="0.5dp" />

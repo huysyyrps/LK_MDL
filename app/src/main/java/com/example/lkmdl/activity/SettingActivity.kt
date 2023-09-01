@@ -218,7 +218,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
         }
     }
 
-    override fun callBack(readData: Array<String>, stringData: String) {
+    override fun callBackSetting(readData: Array<String>, stringData: String) {
         if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
             == stringData.substring(stringData.length - 2, stringData.length)) {
             if (readData[0] == "A2"&&readData[1] == "01") {
@@ -230,5 +230,9 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
                 "配置失败".showToast(this)
             }
         }
+    }
+
+    override fun callBackFile(readData: Array<String>, stringData: String) {
+        TODO("Not yet implemented")
     }
 }

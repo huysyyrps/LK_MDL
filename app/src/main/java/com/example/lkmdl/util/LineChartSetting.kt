@@ -1,10 +1,8 @@
 package com.example.lkmdl.util
 
-import android.graphics.Matrix
 import android.view.MotionEvent
 import com.example.lkmdl.MyApplication
 import com.example.lkmdl.R
-import com.example.lkmdl.activity.ReadFileActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -32,7 +30,7 @@ class LineChartSetting {
 //        linechar.isDoubleTapToZoomEnabled = false
 //        linechar.viewPortHandler.setMaximumScaleX(30.0f)//限制X轴放大限制
 //        linechar.viewPortHandler.setMaximumScaleY(3.0f)
-        linechar.legend.isEnabled = false;// 不显示图例
+        linechar.legend.isEnabled = true;// 不显示图例
 //        linechar.setVisibleXRangeMaximum(80.0f)
         linechar.extraTopOffset = 5.0f
         linechar.extraLeftOffset = 0.0f
