@@ -22,10 +22,10 @@ import com.example.lkmdl.util.dialog.DialogUtil
 object BleConstant {
     var haveDevice = false
     var callBack: BleBackDataCallBack? = null
-    fun setReadCallBack(callBack1: ReadCallBack?) {
-        this.callBack11 = callBack1
+    fun setReadCallBack(settingCallBack: ReadCallBack?) {
+        this.settingCallBack = settingCallBack
     }
-    private var callBack11: ReadCallBack? = null
+    private var settingCallBack: ReadCallBack? = null
 
     fun setBleManage(activity: Activity, param: BleBackDataCallBack) {
         callBack = param
@@ -55,7 +55,7 @@ object BleConstant {
 
     fun scanAndConnect(activity: Activity) {
         haveDevice = false
-        var dialog = DialogUtil().initProgressDialog(activity)
+        var dialog = DialogUtil().initProgressDialog(activity,activity.resources.getString(R.string.device_detection))
 
 
         BleManager.getInstance().scan(object : BleScanCallback() {
@@ -148,7 +148,9 @@ object BleConstant {
                     var stringData = BinaryChange.ByteToString(data)
                     var arrayData = BinaryChange.hexStringToByte(stringData)
                     callBack?.backData(arrayData,stringData)
-                    callBack11?.callBack(arrayData,stringData)
+                    if (stringData.startsWith("A2")){
+                        settingCallBack?.callBack(arrayData,stringData)
+                    }
 //                    MainActivity().ReadData(arrayData, stringData)
                 }
             })

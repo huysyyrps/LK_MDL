@@ -44,6 +44,15 @@ object BleDataMake {
     }
 
     /**
+     * 设置文件名称
+     */
+    fun settingFileName(fileName: String, versionInfo: String):String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.FILENAMECODE}$versionInfo$fileName"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+
+    /**
      * 读取设备数据列表
      */
     fun readFileList():String{

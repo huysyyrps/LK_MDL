@@ -37,7 +37,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     private var bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private lateinit var versionInfoPresenter: VersionInfoPresenter
     private lateinit var registerPresenter: RegisterPresenter
-    private var versionInfo = "01"
+    private var versionInfo = "011"
 
     var dcVoltage: Int = 0
     var exVoltage: Int = 0
@@ -206,18 +206,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     )
                 }
             }
-//            //配置测量参数命令反馈帧头
-//            if (readData[0] == "A2" && readData.size == 3) {
-//                //激活命令回传报文
-//                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-//                    == stringData.substring(stringData.length - 2, stringData.length)) {
-//                    if (readData[1] == "01") {
-//                        LogUtil.e("TAG", "配置成功")
-//                    } else if (readData[1] == "00") {
-//                        "配置失败".showToast(this@MainActivity)
-//                    }
-//                }
-//            }
             //时间校准命令报文识别码
             if (readData[0] == "A3" && readData.size == 9) {
                 //激活命令回传报文
@@ -228,6 +216,19 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                         "校准成功".showToast(this@MainActivity)
                     } else if (readData[1] == "00") {
                         "校准失败".showToast(this@MainActivity)
+                    }
+                }
+            }
+            //设定下次保存文件名称命令回传报文
+            if (readData[0] == "A4" && readData.size == 3) {
+                //激活命令回传报文
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
+                    if (readData[1] == "01") {
+                        "设置成功".showToast(this@MainActivity)
+                    } else if (readData[1] == "00") {
+                        "设置失败".showToast(this@MainActivity)
                     }
                 }
             }
@@ -368,11 +369,20 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                             override fun cancelCallBack() {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
                             }
-
                             override fun sureCallBack(saveName: String) {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
                                 LogUtil.e("TAG", saveName)
-                                LogUtil.e("TAG", BinaryChange.encode(saveName))
+                                var dateName = ""
+                                for (i in saveName.indices){
+                                    if (ChineseTextChange.isChinese(saveName[i].toString())){
+                                        LogUtil.e("TAG",ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
+                                        dateName += ChineseTextChange.strToHexStr_gb2312(saveName[i].toString())
+                                    }else{
+                                        LogUtil.e("TAG",BinaryChange.encode(saveName[i].toString()))
+                                        dateName += BinaryChange.encode(saveName[i].toString())
+                                    }
+                                }
+                                BleConstant.startWrite(BleDataMake.settingFileName(dateName,versionInfo))
                             }
 
                         })
@@ -446,4 +456,5 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     override fun setRegisterMessage(message: String?) {
         message?.let { it.showToast(this) }
     }
+
 }

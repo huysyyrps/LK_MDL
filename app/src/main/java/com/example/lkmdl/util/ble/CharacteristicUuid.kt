@@ -23,6 +23,7 @@ object CharacteristicUuid {
     const val REALTIMEDATA = "A7"
     const val REALTIMECLOSECODE = "00"
     const val REALTIMECODE = "01"
+    const val FILENAMECODE = "A4"
 
     const val METERCODE = "06"
     const val HANDCODE = "B0"

@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.lkmdl.R
 import com.example.lkmdl.util.BaseActivity
 import com.example.lkmdl.util.BaseDateUtil
@@ -13,6 +14,7 @@ import com.example.lkmdl.util.LogUtil
 import com.example.lkmdl.util.ble.BinaryChange
 import com.example.lkmdl.util.ble.BleTimeData
 import com.example.lkmdl.util.ble.blenew.BleConstant
+import com.example.lkmdl.util.dialog.DialogUtil
 import com.example.lkmdl.util.showToast
 import com.example.lkmdl.util.time_picker.BaseTimePicker
 import com.example.lkmdl.util.time_picker.BaseTimePickerImp
@@ -34,6 +36,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
     private var backTime = 0
     private var startTime = ""
     private var endTime = ""
+    private lateinit var dialog: MaterialDialog
 
     companion object {
         fun actionStart(
@@ -80,6 +83,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
         linStartTime.setOnClickListener(this)
         linEndTime.setOnClickListener(this)
         btnUpData.setOnClickListener(this)
+        btnFinish.setOnClickListener(this)
         //显示当前时间
         tvStartTime.text = BaseDateUtil.getCurrentTime()
         tvEndTime.text = BaseDateUtil.getCurrentTime()
@@ -206,6 +210,10 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
                 var data = "BEA2$s$gatherTime$offTime$gatherLaterTime$onTime$onLater$startTime$endTime$backTime"
                 data = "$data${BinaryChange.HexStringToBytes(data)}"
                 BleConstant.startWrite(data)
+                dialog = DialogUtil().initProgressDialog(this,resources.getString(R.string.setting))
+            }
+            R.id.btnFinish -> {
+                finish()
             }
         }
     }
@@ -213,10 +221,12 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
     override fun callBack(readData: Array<String>, stringData: String) {
         if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
             == stringData.substring(stringData.length - 2, stringData.length)) {
-            if (readData[1] == "01") {
+            if (readData[0] == "A2"&&readData[1] == "01") {
                 LogUtil.e("TAG", "配置成功")
+                dialog.dismiss()
                 finish()
             } else if (readData[1] == "00") {
+                dialog.dismiss()
                 "配置失败".showToast(this)
             }
         }

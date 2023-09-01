@@ -10,7 +10,6 @@ import com.example.lkmdl.R
 import com.example.lkmdl.activity.MainActivity
 import com.example.lkmdl.util.BaseSharedPreferences
 import com.example.lkmdl.util.LogUtil
-import com.example.lkmdl.util.ble.*
 import com.example.lkmdl.util.showToast
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry

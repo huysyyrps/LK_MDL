@@ -70,13 +70,13 @@ object BinaryChange {
     }
 
 
-    /*
- * 二进制转十六进制
- * @description:
- * @date: 2022/4/1 16:11
- * @param: binary 二进制
- * @return: java.lang.String 16进制字符串
- */
+    /**
+     * 二进制转十六进制
+     * @description:
+     * @date: 2022/4/1 16:11
+     * @param: binary 二进制
+     * @return: java.lang.String 16进制字符串
+     */
     @NotNull
     fun toHexString(binary1: String): String? {
         var binary = ""
@@ -168,7 +168,7 @@ object BinaryChange {
      * @param str
      * @return
      */
-    fun str2HexStr(str: String): String? {
+    open fun str2HexStr(str: String): String? {
         val chars = "0123456789ABCDEF".toCharArray()
         val sb = java.lang.StringBuilder("")
         val bs = str.toByteArray()
@@ -178,8 +178,6 @@ object BinaryChange {
             sb.append(chars[bit])
             bit = bs[i] and 0x0f
             sb.append(chars[bit])
-
-            // sb.append(' ');
         }
         return sb.toString().trim { it <= ' ' }
     }

@@ -420,12 +420,13 @@
                 android:orientation="horizontal">
 
             <com.example.lkmdl.view.BaseButton
+                    android:id="@+id/btnFinish"
                     android:layout_width="0dp"
                     android:layout_height="35dp"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:text="@string/aline_time"
+                    android:text="@string/btn_cancel"
                     android:textColor="@color/white"
                     android:textSize="13dp"
                     app:bg_corner="5dp" />

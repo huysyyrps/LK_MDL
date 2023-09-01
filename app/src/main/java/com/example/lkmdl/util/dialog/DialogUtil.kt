@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_read_file.recyclerView
 import kotlinx.android.synthetic.main.dialog_config_option.*
 import kotlinx.android.synthetic.main.dialog_save_data.*
 import kotlinx.android.synthetic.main.dialog_scan_again.*
+import kotlinx.android.synthetic.main.progress_dialog.*
 import java.util.ArrayList
 
 
@@ -105,7 +106,7 @@ class DialogUtil {
      * 连接
      */
     fun bleScanAndConnection(activity: MainActivity, bleScanAndConnectCallBack: BleScanAndConnectCallBack) {
-        var dialog = initProgressDialog(activity)
+        var dialog = initProgressDialog(activity,activity.resources.getString(R.string.device_detection))
 //        var connectTag = ""
         BleContent.initBleScanner(object : BleScanCallBack {
             override fun scanFinish(scanFinish: String) {
@@ -150,7 +151,7 @@ class DialogUtil {
     /**
      * 初始化扫描dialog
      */
-    fun initProgressDialog(activity: Activity): MaterialDialog {
+    fun initProgressDialog(activity: Activity, title:String): MaterialDialog {
         dialog = MaterialDialog(activity)
             .cancelable(false)
             .show {
@@ -162,6 +163,7 @@ class DialogUtil {
                 )
                 cornerRadius(16f)
             }
+        dialog.txtFeedBack.text = title
         return dialog
     }
 
