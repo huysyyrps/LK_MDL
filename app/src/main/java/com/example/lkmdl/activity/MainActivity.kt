@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -31,9 +32,14 @@ import com.example.lkmdl.util.dialog.DialogUtil
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_read_file.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
 import java.text.SimpleDateFormat
 
 
@@ -43,7 +49,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     private lateinit var versionInfoPresenter: VersionInfoPresenter
     private lateinit var registerPresenter: RegisterPresenter
     private var versionInfo = "011"
-
     var dcVoltage: Int = 0
     var exVoltage: Int = 0
     var dcCurrent: Int = 0
@@ -55,14 +60,12 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     var onTime: Int = 0
     var onLater: Int = 0
     var backTime: Int = 0
-
     var startYear: Int = 0
     var startMoon: String = ""
     var startDay: String = ""
     var startHour: String = ""
     var startDivide: String = ""
     var startSecond: String = ""
-
     var endYear: Int = 0
     var endMoon: String = ""
     var endDay: String = ""
@@ -70,9 +73,16 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     var endDivide: String = ""
     var endSecond: String = ""
     var index = 0
-    val lineData = LineData()
-    private var selectList = mutableListOf<Boolean>(true, false, false, false, false, false, false, false)
+    var dataList = mutableListOf<String>()
 
+    var set1 : ILineDataSet? = null
+    var set2 : ILineDataSet? = null
+    var set3 : ILineDataSet? = null
+    var set4 : ILineDataSet? = null
+    var set5 : ILineDataSet? = null
+    var set6 : ILineDataSet? = null
+    var set7 : ILineDataSet? = null
+    var set8 : ILineDataSet? = null
 
     private val tabItemStr = arrayListOf<String>().apply {
         add(context.resources.getString(R.string.start))
@@ -100,7 +110,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 
         LineChartSetting().SettingLineChart(mainLineChart, true)
 
-//        BleBackDataRead.BleBackDataContext(this)
         if (!bluetoothAdapter.isEnabled) {
             activityResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
         } else {
@@ -117,20 +126,91 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             }
         }
 
-        bv_battery.BatteryView()
-        bv_battery.setProgress(50)
-
         imageView.setOnClickListener(this)
         linSetting.setOnClickListener(this)
         linVersionCheck.setOnClickListener(this)
         linContactComp.setOnClickListener(this)
         linLocalFile.setOnClickListener(this)
         linProjectFile.setOnClickListener(this)
-        btnMainOption.setOnClickListener(this)
         ivMainTiem.setOnClickListener(this)
         ivMainTiemClose.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
+
+        /**
+         * sbOffDirectCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set1?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set1?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOffDirectVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set2?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set2?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOffAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set3?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set4?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOffAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set4?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set4?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOnDirectCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set5?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set5?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOnDirectVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set6?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set6?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOnAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set7?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set7?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+        sbOnAcVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (isChecked) {
+        set8?.isVisible = true
+        mainLineChart.invalidate()
+        } else {
+        set8?.isVisible = false
+        mainLineChart.invalidate()
+        }
+        }
+         */
     }
 
     //开启蓝牙
@@ -167,7 +247,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             //激活命令回传报文帧头
             if (readData[0] == "B0" && readData.size == 3) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
                     if (readData[1] == "01") {
                         LogUtil.e("TAG", "注册成功")
                     } else if (readData[1] == "00") {
@@ -178,7 +259,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             //读取当前正在运行的配置命令回传报文帧头
             if (readData[0] == "A1" && readData.size == 67) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
                     var offOn = Integer.toBinaryString(Integer.parseInt(readData[41], 16))
                     while (offOn.length < 5) {
                         offOn = "0$offOn"
@@ -247,8 +329,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             //读取实时数据
             if (readData[0] == "A7" && readData.size == 124) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                    == stringData.substring(stringData.length - 2, stringData.length)
+                ) {
                     var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
+                    LogUtil.e("TAG", itemData)
+                    dataList.add(itemData)
                     val arrayData = itemData.split(",").toTypedArray()
                     setEntry(arrayData, index)
                     index++
@@ -264,107 +349,143 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 data = LineData()
                 mainLineChart.data = data
             }
-            var set1 = data.getDataSetByIndex(0)
-            var set2 = data.getDataSetByIndex(1)
-            var set3 = data.getDataSetByIndex(2)
-            var set4 = data.getDataSetByIndex(3)
-            var set5 = data.getDataSetByIndex(4)
-            var set6 = data.getDataSetByIndex(5)
-            var set7 = data.getDataSetByIndex(6)
-            var set8 = data.getDataSetByIndex(7)
+            set1 = data.getDataSetByIndex(0)
+            set2 = data.getDataSetByIndex(1)
+            set3 = data.getDataSetByIndex(2)
+            set4 = data.getDataSetByIndex(3)
+            set5 = data.getDataSetByIndex(4)
+            set6 = data.getDataSetByIndex(5)
+            set7 = data.getDataSetByIndex(6)
+            set8 = data.getDataSetByIndex(7)
+
 
             if (set1 == null) {
-                set1 = createSet(getColor(R.color.color_bg_selected),getString(R.string.off_direct_current))
+                set1 = createSet(getColor(R.color.color_bg_selected_big), getString(R.string.off_direct_current))
                 data.addDataSet(set1)
             }
+            val offDirectCurrent = java.lang.Float.valueOf(arrayData[1])
+            data.addEntry(Entry(index.toFloat(), offDirectCurrent), 0)
+
             if (set2 == null) {
-                set2 = createSet(getColor(R.color.color_bg_selected_big), getString(R.string.off_direct_voltage))
+                set2 = createSet(getColor(R.color.theme_color), getString(R.string.off_direct_voltage))
                 data.addDataSet(set2)
             }
+            val offDirectVoltage = java.lang.Float.valueOf(arrayData[2])
+            data.addEntry(Entry(index.toFloat(), offDirectVoltage), 1)
+
             if (set3 == null) {
                 set3 = createSet(getColor(R.color.greenyellow), getString(R.string.off_ac_current))
                 data.addDataSet(set3)
             }
+            val offExchangeCurrent = java.lang.Float.valueOf(arrayData[3])
+            data.addEntry(Entry(index.toFloat(), offExchangeCurrent), 2)
+
             if (set4 == null) {
                 set4 = createSet(getColor(R.color.red), getString(R.string.off_ac_voltage))
                 data.addDataSet(set4)
             }
+            val offExchangeVoltage = java.lang.Float.valueOf(arrayData[4])
+            data.addEntry(Entry(index.toFloat(), offExchangeVoltage), 3)
+
             if (set5 == null) {
                 set5 = createSet(getColor(R.color.btn_stop_order), getString(R.string.on_direct_current))
                 data.addDataSet(set5)
             }
+            val onDirectCurrent = java.lang.Float.valueOf(arrayData[5])
+            data.addEntry(Entry(index.toFloat(), onDirectCurrent), 4)
+
             if (set6 == null) {
                 set6 = createSet(getColor(R.color.burlywood), getString(R.string.on_direct_voltage))
                 data.addDataSet(set6)
             }
+            val onDirectVoltage = java.lang.Float.valueOf(arrayData[6])
+            data.addEntry(Entry(index.toFloat(), onDirectVoltage), 5)
+
             if (set7 == null) {
                 set7 = createSet(getColor(R.color.text_green), getString(R.string.on_ac_current))
                 data.addDataSet(set7)
             }
+            val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
+            data.addEntry(Entry(index.toFloat(), onExchangeCurrent), 6)
+
             if (set8 == null) {
                 set8 = createSet(getColor(R.color.magenta), getString(R.string.on_ac_voltage))
                 data.addDataSet(set8)
             }
+            val onExchangeVoltage = java.lang.Float.valueOf(arrayData[8])
+            data.addEntry(Entry(index.toFloat(), onExchangeVoltage), 7)
 
-            if (selectList[0]) {
-                val offDirectCurrent = java.lang.Float.valueOf(arrayData[1])
-//                set1.addEntry(Entry(index.toFloat(), offDirectCurrent))
-//                lineData.addDataSet(set1)
-                data.addEntry(Entry(index.toFloat(), offDirectCurrent), 0)
-            }else{
-                data.removeDataSet(0)
+            if (sbOffDirectCurrent.isChecked){
+                set1?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set1?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[1]) {
-                val offDirectVoltage = java.lang.Float.valueOf(arrayData[2])
-                data.addEntry(Entry(index.toFloat(), offDirectVoltage), 1)
-            }else{
-                data.removeDataSet(1)
+
+            if (sbOffDirectVoltage.isChecked){
+                set2?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set2?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[2]) {
-                val offExchangeCurrent = java.lang.Float.valueOf(arrayData[3])
-                data.addEntry(Entry(index.toFloat(), offExchangeCurrent), 2)
-            }else{
-                data.removeDataSet(2)
+
+            if (sbOffAcCurrent.isChecked){
+                set3?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set3?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[3]) {
-                val offExchangeVoltage = java.lang.Float.valueOf(arrayData[4])
-                data.addEntry(Entry(index.toFloat(), offExchangeVoltage), 3)
-            }else{
-                data.removeDataSet(3)
+
+            if (sbOffAcVoltage.isChecked){
+                set4?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set4?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[4]) {
-                val onDirectCurrent = java.lang.Float.valueOf(arrayData[5])
-                data.addEntry(Entry(index.toFloat(), onDirectCurrent), 4)
-            }else{
-                data.removeDataSet(4)
+
+            if (sbOnDirectCurrent.isChecked){
+                set5?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set5?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[5]) {
-                val onDirectVoltage = java.lang.Float.valueOf(arrayData[6])
-                data.addEntry(Entry(index.toFloat(), onDirectVoltage), 5)
-            }else{
-                data.removeDataSet(5)
+
+            if (sbOnDirectVoltage.isChecked){
+                set6?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set6?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[6]) {
-                val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
-                data.addEntry(Entry(index.toFloat(), onExchangeCurrent), 6)
-            }else{
-                data.removeDataSet(6)
+
+            if (sbOnAcCurrent.isChecked){
+                set7?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set7?.isVisible = false
+                mainLineChart.invalidate()
             }
-            if (selectList[7]) {
-                val onExchangeVoltage = java.lang.Float.valueOf(arrayData[8])
-                data.addEntry(Entry(index.toFloat(), onExchangeVoltage), 7)
-            }else{
-                data.removeDataSet(7)
+
+            if (sbOnAcVoltage.isChecked){
+                set8?.isVisible = true
+                mainLineChart.invalidate()
+            }else {
+                set8?.isVisible = false
+                mainLineChart.invalidate()
             }
-//            mainLineChart.data = lineData
-//            mainLineChart.data.notifyDataChanged()
+
             data.notifyDataChanged()
             mainLineChart.notifyDataSetChanged()
             mainLineChart.invalidate()
         }
     }
 
-    private fun createSet(color: Int, title: String): LineDataSet? {
+    private fun createSet(color: Int, title: String): LineDataSet {
         val set = LineDataSet(null, title)
         set.valueTextColor = color
         set.color = color
@@ -385,6 +506,34 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                         BleConstant.startWrite(BleDataMake.readRealStop())
                     }
                     context.resources.getString(R.string.save) -> {
+                        DialogUtil().saveDataDialog(this@MainActivity, object : DialogSaveDataCallBack {
+                            override fun cancelCallBack() {
+                                tbLayout.selectTab(tbLayout.getTabAt(0))
+                            }
+
+                            override fun sureCallBack(saveName: String) {
+                                tbLayout.selectTab(tbLayout.getTabAt(0))
+                                val saveInfo = Gson().toJson(dataList)
+
+                                val dir = context.externalCacheDir.toString() + "/"
+                                val file = File(dir)
+                                //如果不存在  就mkdirs()创建此文件夹
+                                if (!file.exists()) {
+                                    file.mkdirs()
+                                }
+                                //将要保存的图片文件
+                                val mFile = File(dir + "test.csv")
+                                val outputStream = FileOutputStream(mFile)
+                                val writerOutput = OutputStreamWriter(outputStream)
+                                val writer = BufferedWriter(writerOutput)
+                                writer.write(saveInfo)
+                                writer.flush() //刷新流
+                                writer.close() //关闭流
+
+
+                            }
+
+                        })
                     }
                     context.resources.getString(R.string.aline_time) -> {
                         var currentTime = BleTimeData.timeDateToHex(SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(BaseDateUtil.getCurrentTime()))
@@ -396,20 +545,21 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                             override fun cancelCallBack() {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
                             }
+
                             override fun sureCallBack(saveName: String) {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
                                 LogUtil.e("TAG", saveName)
                                 var dateName = ""
-                                for (i in saveName.indices){
-                                    if (ChineseTextChange.isChinese(saveName[i].toString())){
-                                        LogUtil.e("TAG",ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
+                                for (i in saveName.indices) {
+                                    if (ChineseTextChange.isChinese(saveName[i].toString())) {
+                                        LogUtil.e("TAG", ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
                                         dateName += ChineseTextChange.strToHexStr_gb2312(saveName[i].toString())
-                                    }else{
-                                        LogUtil.e("TAG",BinaryChange.encode(saveName[i].toString()))
+                                    } else {
+                                        LogUtil.e("TAG", BinaryChange.encode(saveName[i].toString()))
                                         dateName += BinaryChange.encode(saveName[i].toString())
                                     }
                                 }
-                                BleConstant.startWrite(BleDataMake.settingFileName(dateName,versionInfo))
+                                BleConstant.startWrite(BleDataMake.settingFileName(dateName, versionInfo))
                             }
 
                         })
@@ -428,6 +578,16 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             R.id.imageView -> {
                 drawer_layout.openDrawer(GravityCompat.START)
             }
+            R.id.ivMainTiem -> {
+                ivMainTiem.visibility = View.GONE
+                ivMainTiemClose.visibility = View.VISIBLE
+                cdSelect.visibility = View.VISIBLE
+            }
+            R.id.ivMainTiemClose -> {
+                ivMainTiem.visibility = View.VISIBLE
+                ivMainTiemClose.visibility = View.GONE
+                cdSelect.visibility = View.GONE
+            }
             R.id.linSetting -> {
                 BleConstant.startWrite(BleDataMake.readSetting())
             }
@@ -439,28 +599,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             }
             R.id.linLocalFile -> {
                 LocalFileActivity.actionStart(this)
-            }
-            R.id.ivMainTiem -> {
-                linMainTime.visibility = View.VISIBLE
-                ivMainTiem.visibility = View.GONE
-                ivMainTiemClose.visibility = View.VISIBLE
-            }
-            R.id.ivMainTiemClose -> {
-                linMainTime.visibility = View.GONE
-                ivMainTiem.visibility = View.VISIBLE
-                ivMainTiemClose.visibility = View.GONE
-            }
-            R.id.btnMainOption -> {
-                DialogUtil().ConfigOptionDialog(this, selectList, object : DialogCallBack {
-                    override fun callBack(backList: MutableList<Boolean>) {
-                        selectList = backList
-                        mainLineChart.fitScreen()
-                        for (i in 0 until selectList.size){
-
-                        }
-                    }
-
-                })
             }
         }
     }

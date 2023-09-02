@@ -71,17 +71,33 @@ class DialogUtil {
         }
     }
 
+
+
     /**
     权限申请
      */
     @RequiresApi(Build.VERSION_CODES.S)
     fun requestPermission(activity: MainActivity): Boolean {
+
         var permissionTag = false
         val requestList = ArrayList<String>()
         requestList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         requestList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         requestList.add(Manifest.permission.ACCESS_COARSE_LOCATION)
         requestList.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            // Android 版本大于等于 Android12 时
+            // 只包括蓝牙这部分的权限，其余的需要什么权限自己添加
+            requestList.add(Manifest.permission.BLUETOOTH_SCAN);
+            requestList.add(Manifest.permission.BLUETOOTH_ADVERTISE);
+            requestList.add(Manifest.permission.BLUETOOTH_CONNECT);
+        }
+//        else {
+//            // Android 版本小于 Android12 及以下版本
+//            requestList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+//            requestList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+//        }
+
         if (requestList.isNotEmpty()) {
             PermissionX.init(activity)
                 .permissions(requestList)

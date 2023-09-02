@@ -13,11 +13,13 @@ import com.clj.fastble.callback.BleWriteCallback
 import com.clj.fastble.data.BleDevice
 import com.clj.fastble.exception.BleException
 import com.clj.fastble.scan.BleScanRuleConfig
+import com.example.lkmdl.MyApplication
 import com.example.lkmdl.R
 import com.example.lkmdl.util.ble.BinaryChange
 import com.example.lkmdl.util.ble.BleDataMake
 import com.example.lkmdl.util.ble.CharacteristicUuid
 import com.example.lkmdl.util.dialog.DialogUtil
+import com.example.lkmdl.util.showToast
 
 object BleConstant {
     var haveDevice = false
@@ -140,6 +142,7 @@ object BleConstant {
                 override fun onNotifyFailure(exception: BleException) {
                     // 打开通知操作失败
                     Log.e("TAG", "打开通知失败")
+//                    "打开通知失败,请检测设备是否正常运行".showToast(MyApplication.context)
                 }
 
                 @RequiresApi(Build.VERSION_CODES.O)

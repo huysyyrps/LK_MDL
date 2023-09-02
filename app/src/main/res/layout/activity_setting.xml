@@ -12,436 +12,441 @@
             style="@style/Header"
             app:header_is_left_iv_visiable="true"
             app:header_title="@string/app_name" />
-
-    <LinearLayout
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:orientation="vertical">
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1.4"
-                app:cardCornerRadius="10dp">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                <com.example.lkmdl.view.BaseTitle
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        app:text_header_is_left_iv_visiable="true"
-                        app:text_header_title="@string/inspect_select" />
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/dc_voltage" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sbDCVoltage"
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/ex_voltage" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sbEXVoltage"
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/dc_current" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sbDCCurrent"
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/ex_current" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sbEXCurrent"
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/on_off_measure" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                android:id="@+id/sbOffOn"
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:visibility="invisible">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="直流电压测量" />
-
-                        <com.kyleduo.switchbutton.SwitchButton
-                                style="@style/SwitchButtonStyle"
-                                app:kswTextAdjust="-2dp"
-                                app:kswTextExtra="8dp"
-                                app:kswTextOff="Off"
-                                app:kswTextOn="On"
-                                app:kswTintColor="@color/theme_color" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="4dp"
-                android:layout_weight="1.4"
-                app:cardCornerRadius="10dp">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                <com.example.lkmdl.view.BaseTitle
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        app:text_header_is_left_iv_visiable="true"
-                        app:text_header_title="@string/operate_setting" />
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/gather_time" />
-
-                            <EditText
-                                    android:id="@+id/etGatherTime"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/off_time" />
-
-                            <EditText
-                                    android:id="@+id/etOffTime"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/off_gather_later_time" />
-
-                            <EditText
-                                    android:id="@+id/etGatherLaterTime"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/on_time" />
-
-                            <EditText
-                                    android:id="@+id/etOnTime"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/on_later" />
-
-                            <EditText
-                                    android:id="@+id/etOnLater"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                            <com.example.lkmdl.view.BaseTextView
-                                    style="@style/SelectTextView"
-                                    app:content_title="@string/only_back_date" />
-
-                            <EditText
-                                    android:id="@+id/etBackTime"
-                                    style="@style/EditText"
-                                    android:inputType="number"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="4dp"
-                android:layout_weight="0.8"
-                app:cardCornerRadius="10dp">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                <com.example.lkmdl.view.BaseTitle
-                        android:layout_width="match_parent"
-                        android:layout_height="25dp"
-                        app:text_header_is_left_iv_visiable="true"
-                        app:text_header_title="@string/time_select" />
-
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/start_date" />
-
-                        <LinearLayout
-                                android:id="@+id/linStartTime"
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:orientation="horizontal">
-
-                            <TextView
-                                    android:id="@+id/tvStartTime"
-                                    android:layout_height="30dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_marginLeft="25dp"
-                                    android:gravity="center|left"
-                                    android:textSize="15dp"
-                                    android:textColor="@color/white"
-                                    android:text="1997-01-01 12:00:00" />
-
-                            <ImageView
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:padding="5dp"
-                                    android:layout_marginBottom="4dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@drawable/ic_time_select" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                        <TextView
-                                style="@style/SelectTextView"
-                                android:text="@string/end_date" />
-
-                        <LinearLayout
-                                android:id="@+id/linEndTime"
-                                android:layout_width="match_parent"
-                                android:layout_height="40dp"
-                                android:orientation="horizontal">
-
-                            <TextView
-                                    android:id="@+id/tvEndTime"
-                                    android:layout_height="30dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_marginLeft="25dp"
-                                    android:gravity="center|left"
-                                    android:textSize="15dp"
-                                    android:textColor="@color/white"
-                                    android:text="1997-01-01 12:00:00" />
-
-                            <ImageView
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:padding="4dp"
-                                    android:layout_marginBottom="5dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:src="@drawable/ic_time_select" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
+            android:layout_height="match_parent">
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
 
-            <com.example.lkmdl.view.BaseButton
-                    android:id="@+id/btnFinish"
-                    android:layout_width="0dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:text="@string/btn_cancel"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
-                    app:bg_corner="5dp" />
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1.4"
+                    app:cardCornerRadius="10dp">
 
-            <com.example.lkmdl.view.BaseButton
-                    android:id="@+id/btnUpData"
-                    android:layout_width="0dp"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:text="@string/confirm_config"
-                    android:textColor="@color/white"
-                    android:textSize="13dp"
-                    app:bg_corner="5dp" />
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <com.example.lkmdl.view.BaseTitle
+                            android:layout_width="match_parent"
+                            android:layout_height="25dp"
+                            app:text_header_is_left_iv_visiable="true"
+                            app:text_header_title="@string/inspect_select" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/dc_voltage" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    android:id="@+id/sbDCVoltage"
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/ex_voltage" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    android:id="@+id/sbEXVoltage"
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/dc_current" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    android:id="@+id/sbDCCurrent"
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/ex_current" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    android:id="@+id/sbEXCurrent"
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/on_off_measure" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    android:id="@+id/sbOffOn"
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical"
+                                android:visibility="invisible">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="直流电压测量" />
+
+                            <com.kyleduo.switchbutton.SwitchButton
+                                    style="@style/SwitchButtonStyle"
+                                    app:kswTextAdjust="-2dp"
+                                    app:kswTextExtra="8dp"
+                                    app:kswTextOff="Off"
+                                    app:kswTextOn="On"
+                                    app:kswTintColor="@color/theme_color" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1.7"
+                    app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <com.example.lkmdl.view.BaseTitle
+                            android:layout_width="match_parent"
+                            android:layout_height="25dp"
+                            app:text_header_is_left_iv_visiable="true"
+                            app:text_header_title="@string/operate_setting" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/gather_time" />
+
+                                <EditText
+                                        android:id="@+id/etGatherTime"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/off_time" />
+
+                                <EditText
+                                        android:id="@+id/etOffTime"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/off_gather_later_time" />
+
+                                <EditText
+                                        android:id="@+id/etGatherLaterTime"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/on_time" />
+
+                                <EditText
+                                        android:id="@+id/etOnTime"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/on_later" />
+
+                                <EditText
+                                        android:id="@+id/etOnLater"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                <com.example.lkmdl.view.BaseTextView
+                                        style="@style/SelectTextView"
+                                        app:content_title="@string/only_back_date" />
+
+                                <EditText
+                                        android:id="@+id/etBackTime"
+                                        style="@style/EditText"
+                                        android:inputType="number"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="4dp"
+                    android:layout_weight="0.8"
+                    app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                    <com.example.lkmdl.view.BaseTitle
+                            android:layout_width="match_parent"
+                            android:layout_height="25dp"
+                            app:text_header_is_left_iv_visiable="true"
+                            app:text_header_title="@string/time_select" />
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/start_date" />
+
+                            <LinearLayout
+                                    android:id="@+id/linStartTime"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:orientation="horizontal">
+
+                                <TextView
+                                        android:id="@+id/tvStartTime"
+                                        android:layout_height="30dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_marginLeft="25dp"
+                                        android:gravity="center|left"
+                                        android:textSize="15dp"
+                                        android:textColor="@color/white"
+                                        android:text="1997-01-01 12:00:00" />
+
+                                <ImageView
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:padding="5dp"
+                                        android:layout_marginBottom="4dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:src="@drawable/ic_time_select" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                            <TextView
+                                    style="@style/SelectTextView"
+                                    android:text="@string/end_date" />
+
+                            <LinearLayout
+                                    android:id="@+id/linEndTime"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:orientation="horizontal">
+
+                                <TextView
+                                        android:id="@+id/tvEndTime"
+                                        android:layout_height="30dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_marginLeft="25dp"
+                                        android:gravity="center|left"
+                                        android:textSize="15dp"
+                                        android:textColor="@color/white"
+                                        android:text="1997-01-01 12:00:00" />
+
+                                <ImageView
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
+                                        android:padding="4dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:src="@drawable/ic_time_select" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal">
+
+                <com.example.lkmdl.view.BaseButton
+                        android:id="@+id/btnFinish"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_cancel"
+                        android:textColor="@color/white"
+                        android:textSize="13dp"
+                        app:bg_corner="5dp" />
+
+                <com.example.lkmdl.view.BaseButton
+                        android:id="@+id/btnUpData"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:text="@string/confirm_config"
+                        android:textColor="@color/white"
+                        android:textSize="13dp"
+                        app:bg_corner="5dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
+
+
 </LinearLayout>
