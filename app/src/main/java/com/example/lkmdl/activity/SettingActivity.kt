@@ -185,12 +185,12 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
                 }
                 var s = BinaryChange.toHexString("$dcVoltage$exVoltage$dcCurrent$exCurrent$offOnState")
 
-                var gatherTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherTime.text.toString()), 4).toString())
-                var offTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOffTime.text.toString()), 4).toString())
-                var gatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherLaterTime.text.toString()), 4).toString())
-                var onTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnTime.text.toString()), 4).toString())
-                var onLaterArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnLater.text.toString()), 4).toString())
-                var backTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etBackTime.text.toString()), 4).toString())
+                var gatherTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherTime.text.toString().toInt().toString()), 4).toString())
+                var offTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOffTime.text.toString().toInt().toString()), 4).toString())
+                var gatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherLaterTime.text.toString().toInt().toString()), 4).toString())
+                var onTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnTime.text.toString().toInt().toString()), 4).toString())
+                var onLaterArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnLater.text.toString().toInt().toString()), 4).toString())
+                var backTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etBackTime.text.toString().toInt().toString()), 4).toString())
 
                 var gatherTime = gatherTimeArray[1]+gatherTimeArray[0]
                 var offTime = offTimeArray[1]+offTimeArray[0]

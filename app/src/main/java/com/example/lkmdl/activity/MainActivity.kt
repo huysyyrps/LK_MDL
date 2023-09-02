@@ -331,12 +331,13 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
                     == stringData.substring(stringData.length - 2, stringData.length)
                 ) {
-                    var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
-                    LogUtil.e("TAG", itemData)
-                    dataList.add(itemData)
-                    val arrayData = itemData.split(",").toTypedArray()
-                    setEntry(arrayData, index)
-                    index++
+                    if (tbLayout.getTabAt(0)!!.isSelected){
+                        var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
+                        dataList.add(itemData)
+                        val arrayData = itemData.split(",").toTypedArray()
+                        setEntry(arrayData, index)
+                        index++
+                    }
                 }
             }
         }
