@@ -212,7 +212,7 @@ object BinaryChange {
             n += str.indexOf(hexs[2 * i + 1])
             bytes[i] = (n and 0xff).toByte()
         }
-        return String(bytes)
+        return String(bytes, charset("GB2312"))
     }
 
 

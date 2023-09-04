@@ -169,7 +169,7 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
                         hexFileList.add(stringData.substring(6, 44))
                         selectIndex = 0
                         adapter = FileListAdapter(fileList, selectIndex, this, object : AdapterPositionCallBack {
-                            override fun backPosition(index: Int) {
+                            override fun backPosition(indexSelect: Int) {
                                 lineChart.clear()
                                 set1 = null
                                 set2 = null
@@ -179,8 +179,9 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
                                 set6 = null
                                 set7 = null
                                 set8 = null
+                                index = 0
                                 dataList.clear()
-                                selectIndex = index
+                                selectIndex = indexSelect
                                 BleConstant.startWrite(BleDataMake.readFile(hexFileList[selectIndex]))
                             }
                         })
@@ -195,8 +196,7 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
             }
             if (readData[0] == "A6" && readData.size == 124) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)
-                ) {
+                    == stringData.substring(stringData.length - 2, stringData.length)) {
                     if (readData[2] == "01") {
                         isLast = true
                         linReadSelect.visibility = View.VISIBLE

@@ -38,7 +38,7 @@ object BleDataMake {
      * 校准时间
      */
     fun alineTime(hexTime:String):String{
-        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.ALINETIMECODE}${CharacteristicUuid.ALINETIMETAG}"
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.ALINETIMECODE}${CharacteristicUuid.ALINETIMETAG}$hexTime"
         var checksum = BaseData.hexStringToBytes(data)
         return "$data$checksum"
     }

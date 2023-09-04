@@ -133,7 +133,13 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         ivMainTiemClose.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
+
+//        var hexString = "B2E2CAD4C3FBB3C72E43535600000000000000000000000000000000000000000000000000000000";
+//        LogUtil.e("TAG",BinaryChange.hexStr2Str(hexString))
+
     }
+
+
 
     //开启蓝牙
     @RequiresApi(Build.VERSION_CODES.S)
@@ -474,12 +480,12 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     context.resources.getString(R.string.aline_time) -> {
                         var currentTime = BleTimeData.timeDateToHex(SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(BaseDateUtil.getCurrentTime()))
                         BleConstant.startWrite(BleDataMake.alineTime(currentTime))
-                        tbLayout.selectTab(tbLayout.getTabAt(0))
+//                        tbLayout.selectTab(tbLayout.getTabAt(0))
                     }
                     context.resources.getString(R.string.save_data) -> {
                         DialogUtil().saveDataDialog(this@MainActivity, object : DialogSaveDataCallBack {
                             override fun cancelCallBack() {
-                                tbLayout.selectTab(tbLayout.getTabAt(0))
+//                                tbLayout.selectTab(tbLayout.getTabAt(0))
                             }
 
                             override fun sureCallBack(saveName: String) {
