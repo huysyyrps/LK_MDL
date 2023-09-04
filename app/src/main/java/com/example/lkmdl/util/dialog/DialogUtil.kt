@@ -44,7 +44,7 @@ class DialogUtil {
     fun ConfigOptionDialog(activity: Activity, selectList: MutableList<Boolean>, callBack: DialogCallBack) {
 //        CoroutineScope(Dispatchers.Main)
 //            .launch {
-        var vallBackList = mutableListOf<Boolean>()
+        var vallBackList = selectList
         dialog = MaterialDialog(activity)
             .cancelable(true)
             .show {

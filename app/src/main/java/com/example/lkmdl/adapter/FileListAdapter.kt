@@ -1,4 +1,4 @@
-package com.example.lkacmf.adapter
+package com.example.lkmdl.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
@@ -24,7 +24,7 @@ internal class FileListAdapter(
     //重写的第一个方法，用来给制定加载那个类型的Recycler布局
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view= LayoutInflater.from(parent.context).inflate(R.layout.adapter_file_list,parent,false)
-        var viewHolder=ViewHolder(view)
+        var viewHolder= ViewHolder(view)
         //单机事件
         viewHolder.backItem.setOnClickListener {
             var position= viewHolder.layoutPosition

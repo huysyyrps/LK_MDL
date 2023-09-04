@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -26,7 +25,6 @@ import com.example.lkmdl.util.ble.BleReadDataOperate
 import com.example.lkmdl.util.ble.BleTimeData
 import com.example.lkmdl.util.ble.blenew.BleBackDataCallBack
 import com.example.lkmdl.util.ble.blenew.BleConstant
-import com.example.lkmdl.util.dialog.DialogCallBack
 import com.example.lkmdl.util.dialog.DialogSaveDataCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.github.mikephil.charting.data.Entry
@@ -34,7 +32,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedWriter
 import java.io.File
@@ -87,6 +84,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     private val tabItemStr = arrayListOf<String>().apply {
         add(context.resources.getString(R.string.start))
         add(context.resources.getString(R.string.stop))
+        add(context.resources.getString(R.string.refresh))
         add(context.resources.getString(R.string.save))
         add(context.resources.getString(R.string.aline_time))
         add(context.resources.getString(R.string.save_data))
@@ -118,7 +116,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             if (permissionTag) {
                 BleConstant.setBleManage(this, object : BleBackDataCallBack {
                     override fun backData(readData: Array<String>, stringData: String) {
-                        LogUtil.e("TAG", stringData)
                         readData(readData, stringData)
                     }
 
@@ -136,7 +133,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         ivMainTiemClose.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
-
     }
 
     //开启蓝牙
@@ -432,6 +428,20 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     context.resources.getString(R.string.stop) -> {
                         BleConstant.startWrite(BleDataMake.readRealStop())
                     }
+                    context.resources.getString(R.string.refresh) -> {
+                        mainLineChart.clear()
+                        set1 = null
+                        set2 = null
+                        set3 = null
+                        set4 = null
+                        set5 = null
+                        set6 = null
+                        set7 = null
+                        set8 = null
+                        index = 0
+                        dataList.clear()
+                        tbLayout.selectTab(tbLayout.getTabAt(0))
+                    }
                     context.resources.getString(R.string.save) -> {
                         DialogUtil().saveDataDialog(this@MainActivity, object : DialogSaveDataCallBack {
                             override fun cancelCallBack() {
@@ -440,8 +450,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 
                             override fun sureCallBack(saveName: String) {
                                 tbLayout.selectTab(tbLayout.getTabAt(0))
-                                val saveInfo = Gson().toJson(dataList)
-
                                 val dir = context.externalCacheDir.toString() + "/"
                                 val file = File(dir)
                                 //如果不存在  就mkdirs()创建此文件夹
@@ -449,15 +457,16 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                                     file.mkdirs()
                                 }
                                 //将要保存的图片文件
-                                val mFile = File(dir + "test.csv")
+                                val mFile = File("$dir$saveName.csv")
                                 val outputStream = FileOutputStream(mFile)
                                 val writerOutput = OutputStreamWriter(outputStream)
                                 val writer = BufferedWriter(writerOutput)
-                                writer.write(saveInfo)
+                                for (i in 0 until dataList.size){
+                                    writer.write(dataList[i])
+                                    writer.newLine();
+                                }
                                 writer.flush() //刷新流
                                 writer.close() //关闭流
-
-
                             }
 
                         })
@@ -528,7 +537,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 LocalFileActivity.actionStart(this)
             }
             R.id.linProjectFile -> {
-                LocalFileActivity.actionStart(this)
+                PrijectFileActivity.actionStart(this)
             }
         }
     }
