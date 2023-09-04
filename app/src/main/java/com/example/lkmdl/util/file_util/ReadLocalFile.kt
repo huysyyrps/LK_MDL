@@ -1,5 +1,6 @@
 package com.example.lkmdl.util.file_util
 
+import android.app.Activity
 import com.example.lkmdl.activity.LocalFileActivity
 import java.io.BufferedReader
 import java.io.File
@@ -9,7 +10,7 @@ import java.net.URLDecoder
 
 object ReadLocalFile {
     private var pathList = ArrayList<String>()
-    fun readFileList(context: LocalFileActivity): ArrayList<String> {
+    fun readFileList(context: Activity): ArrayList<String> {
         /**将文件夹下所有文件名存入数组*/
         var file = File(context.externalCacheDir.toString() + "/")
         if (file.list().size > 1) {

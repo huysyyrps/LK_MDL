@@ -137,80 +137,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
 
-        /**
-         * sbOffDirectCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set1?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set1?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOffDirectVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set2?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set2?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOffAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set3?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set4?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOffAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set4?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set4?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOnDirectCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set5?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set5?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOnDirectVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set6?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set6?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOnAcCurrent.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set7?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set7?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-        sbOnAcVoltage.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-        set8?.isVisible = true
-        mainLineChart.invalidate()
-        } else {
-        set8?.isVisible = false
-        mainLineChart.invalidate()
-        }
-        }
-         */
     }
 
     //开启蓝牙
@@ -599,6 +525,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 BaseTelPhone.telPhone(this)
             }
             R.id.linLocalFile -> {
+                LocalFileActivity.actionStart(this)
+            }
+            R.id.linProjectFile -> {
                 LocalFileActivity.actionStart(this)
             }
         }

@@ -29,6 +29,10 @@
             android:supportsRtl="true"
             android:theme="@style/NoAction">
         <activity
+                android:name=".activity.PrijectFileActivity"
+                android:exported="false"
+                android:screenOrientation="landscape"/>
+        <activity
                 android:name=".activity.LocalFileActivity"
                 android:exported="false"
                 android:screenOrientation="landscape"/>
