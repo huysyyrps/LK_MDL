@@ -196,7 +196,7 @@ class LocalFileActivity : BaseActivity(), View.OnClickListener{
     //绘制linechart
     private fun setChartData() {
         if (selectList[0]) {
-            offDirectCurrentSet = LineDataSet(entriesOffDirectCurrent, "")
+            offDirectCurrentSet = LineDataSet(entriesOffDirectCurrent, getString(R.string.off_direct_current))
             offDirectCurrentSet?.color = getColor(R.color.color_bg_selected) //设置线的颜色
             //不绘制数据
             offDirectCurrentSet?.setDrawValues(false)
@@ -204,43 +204,43 @@ class LocalFileActivity : BaseActivity(), View.OnClickListener{
             offDirectCurrentSet?.setDrawCircles(false)
         }
         if (selectList[1]) {
-            offDirectVoltageSet = LineDataSet(entriesOffDirectVoltage, "")
+            offDirectVoltageSet = LineDataSet(entriesOffDirectVoltage, getString(R.string.off_direct_voltage))
             offDirectVoltageSet?.color = getColor(R.color.color_bg_selected_big) //设置线的颜色
             offDirectVoltageSet?.setDrawValues(false)
             offDirectVoltageSet?.setDrawCircles(false)
         }
         if (selectList[2]) {
-            offExchangeCurrentSet = LineDataSet(entriesOffExchangeCurrent, "")
+            offExchangeCurrentSet = LineDataSet(entriesOffExchangeCurrent, getString(R.string.off_ac_current))
             offExchangeCurrentSet?.color = getColor(R.color.greenyellow) //设置线的颜色
             offExchangeCurrentSet?.setDrawValues(false)
             offExchangeCurrentSet?.setDrawCircles(false)
         }
         if (selectList[3]) {
-            offExchangeVoltageSet = LineDataSet(entriesOffExchangeVoltage, "")
+            offExchangeVoltageSet = LineDataSet(entriesOffExchangeVoltage, getString(R.string.off_ac_voltage))
             offExchangeVoltageSet?.color = getColor(R.color.red) //设置线的颜色
             offExchangeVoltageSet?.setDrawValues(false)
             offExchangeVoltageSet?.setDrawCircles(false)
         }
         if (selectList[4]) {
-            onDirectCurrentSet = LineDataSet(entriesOnDirectCurrent, "")
+            onDirectCurrentSet = LineDataSet(entriesOnDirectCurrent, getString(R.string.on_direct_current))
             onDirectCurrentSet?.color = getColor(R.color.btn_stop_order) //设置线的颜色
             onDirectCurrentSet?.setDrawValues(false)
             onDirectCurrentSet?.setDrawCircles(false)
         }
         if (selectList[5]) {
-            onDirectVoltageSet = LineDataSet(entriesOnDirectVoltage, "")
+            onDirectVoltageSet = LineDataSet(entriesOnDirectVoltage, getString(R.string.on_direct_voltage))
             onDirectVoltageSet?.color = getColor(R.color.burlywood) //设置线的颜色
             onDirectVoltageSet?.setDrawValues(false)
             onDirectVoltageSet?.setDrawCircles(false)
         }
         if (selectList[6]) {
-            onExchangeCurrent = LineDataSet(entriesOnExchangeCurrent, "")
+            onExchangeCurrent = LineDataSet(entriesOnExchangeCurrent, getString(R.string.on_ac_current))
             onExchangeCurrent?.color = getColor(R.color.text_green) //设置线的颜色
             onExchangeCurrent?.setDrawValues(false)
             onExchangeCurrent?.setDrawCircles(false)
         }
         if (selectList[7]) {
-            onExchangeVoltage = LineDataSet(entriesOnExchangeVoltage, "")
+            onExchangeVoltage = LineDataSet(entriesOnExchangeVoltage, getString(R.string.on_ac_voltage))
             onExchangeVoltage?.color = getColor(R.color.magenta) //设置线的颜色
             onExchangeVoltage?.setDrawValues(false)
             onExchangeVoltage?.setDrawCircles(false)

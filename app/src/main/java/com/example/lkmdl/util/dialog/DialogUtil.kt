@@ -17,6 +17,7 @@ import com.example.lkmdl.activity.LocalFileActivity
 import com.example.lkmdl.adapter.SelectItemAdapter
 import com.example.lkmdl.util.AdapterSelectCallBack
 import com.example.lkmdl.util.Constant
+import com.example.lkmdl.util.PermissionallBack
 import com.example.lkmdl.util.ble.BleConnectCallBack
 import com.example.lkmdl.util.ble.BleContent
 import com.example.lkmdl.util.ble.BleScanAndConnectCallBack
@@ -77,7 +78,7 @@ class DialogUtil {
     权限申请
      */
     @RequiresApi(Build.VERSION_CODES.S)
-    fun requestPermission(activity: MainActivity): Boolean {
+    fun requestPermission(activity: MainActivity, callBacl: PermissionallBack): Boolean {
 
         var permissionTag = false
         val requestList = ArrayList<String>()
@@ -103,13 +104,16 @@ class DialogUtil {
                 .permissions(requestList)
                 .onExplainRequestReason { scope, deniedList ->
                     val message = "需要您同意以下权限才能正常使用"
+                    callBacl.permissionState(false)
                     scope.showRequestReasonDialog(deniedList, message, "同意", "取消")
                 }
                 .request { allGranted, _, deniedList ->
                     if (allGranted) {
                         Log.e("TAG", "所有申请的权限都已通过")
                         permissionTag = true
+                        callBacl.permissionState(true)
                     } else {
+                        callBacl.permissionState(false)
                         Log.e("TAG", "您拒绝了如下权限：$deniedList")
                         activity.finish()
                     }

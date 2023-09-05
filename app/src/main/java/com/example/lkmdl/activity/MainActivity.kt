@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.view.GravityCompat
@@ -80,7 +82,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     var set6 : ILineDataSet? = null
     var set7 : ILineDataSet? = null
     var set8 : ILineDataSet? = null
-
     private val tabItemStr = arrayListOf<String>().apply {
         add(context.resources.getString(R.string.start))
         add(context.resources.getString(R.string.stop))
@@ -88,6 +89,21 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         add(context.resources.getString(R.string.save))
         add(context.resources.getString(R.string.aline_time))
         add(context.resources.getString(R.string.save_data))
+    }
+
+    private var exitTime: Long = 0
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() === KeyEvent.ACTION_DOWN) {
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                Toast.makeText(applicationContext, "再按一次退出程序", Toast.LENGTH_SHORT).show()
+                exitTime = System.currentTimeMillis()
+            } else {
+                finish()
+                System.exit(0)
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 
@@ -109,18 +125,32 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         LineChartSetting().SettingLineChart(mainLineChart, true)
 
         if (!bluetoothAdapter.isEnabled) {
-            activityResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+            DialogUtil().requestPermission(this,object :PermissionallBack{
+                override fun permissionState(state: Boolean) {
+                    activityResult.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                }
+            })
         } else {
             //是否通过全部权限
-            var permissionTag = DialogUtil().requestPermission(this)
-            if (permissionTag) {
-                BleConstant.setBleManage(this, object : BleBackDataCallBack {
-                    override fun backData(readData: Array<String>, stringData: String) {
-                        readData(readData, stringData)
-                    }
+            DialogUtil().requestPermission(this,object :PermissionallBack{
+                override fun permissionState(state: Boolean) {
+                    BleConstant.setBleManage(this@MainActivity, object : BleBackDataCallBack {
+                        override fun backData(readData: Array<String>, stringData: String) {
+                            readData(readData, stringData)
+                        }
 
-                })
-            }
+                    })
+                }
+
+            })
+//            if (permissionTag) {
+//                BleConstant.setBleManage(this, object : BleBackDataCallBack {
+//                    override fun backData(readData: Array<String>, stringData: String) {
+//                        readData(readData, stringData)
+//                    }
+//
+//                })
+//            }
         }
 
         imageView.setOnClickListener(this)
@@ -139,14 +169,21 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 
     }
 
-
-
     //开启蓝牙
     @RequiresApi(Build.VERSION_CODES.S)
     private val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             if (bluetoothAdapter.isEnabled) {
-                DialogUtil().requestPermission(this)
+                DialogUtil().requestPermission(this, object : PermissionallBack {
+                    override fun permissionState(state: Boolean) {
+                        BleConstant.setBleManage(this@MainActivity, object : BleBackDataCallBack {
+                            override fun backData(readData: Array<String>, stringData: String) {
+                                readData(readData, stringData)
+                            }
+
+                        })
+                    }
+                })
             } else {
                 R.string.ble_open_fail.showToast(context)
             }
@@ -257,8 +294,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
             //读取实时数据
             if (readData[0] == "A7" && readData.size == 124) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)
-                ) {
+                    == stringData.substring(stringData.length - 2, stringData.length)) {
                     if (tbLayout.getTabAt(0)!!.isSelected){
                         var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
                         dataList.add(itemData)
@@ -469,7 +505,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                                 val writer = BufferedWriter(writerOutput)
                                 for (i in 0 until dataList.size){
                                     writer.write(dataList[i])
-                                    writer.newLine();
+//                                    writer.newLine()
                                 }
                                 writer.flush() //刷新流
                                 writer.close() //关闭流
@@ -489,7 +525,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                             }
 
                             override fun sureCallBack(saveName: String) {
-                                tbLayout.selectTab(tbLayout.getTabAt(0))
+//                                tbLayout.selectTab(tbLayout.getTabAt(0))
                                 LogUtil.e("TAG", saveName)
                                 var dateName = ""
                                 for (i in saveName.indices) {
@@ -500,6 +536,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                                         LogUtil.e("TAG", BinaryChange.encode(saveName[i].toString()))
                                         dateName += BinaryChange.encode(saveName[i].toString())
                                     }
+                                }
+                                if(dateName.length>70){
+                                    "文件名称过长".showToast(this@MainActivity)
+                                    return
                                 }
                                 BleConstant.startWrite(BleDataMake.settingFileName(dateName, versionInfo))
                             }

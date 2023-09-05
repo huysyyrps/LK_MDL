@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LKMDL</string>
+    <string name="app_name">多功能数据记录仪</string>
     <string name="btn_sure">确定</string>
     <string name="btn_cancel">取消</string>
     <string name="phone_title">未检测到IC卡，请更换其他设备拨打 0537-2638599</string>
