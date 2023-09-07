@@ -219,6 +219,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
     }
 
     override fun callBackSetting(readData: Array<String>, stringData: String) {
+        LogUtil.e("TAG",stringData)
         if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
             == stringData.substring(stringData.length - 2, stringData.length)) {
             if (readData[0] == "A2"&&readData[1] == "01") {

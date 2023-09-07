@@ -143,14 +143,6 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 }
 
             })
-//            if (permissionTag) {
-//                BleConstant.setBleManage(this, object : BleBackDataCallBack {
-//                    override fun backData(readData: Array<String>, stringData: String) {
-//                        readData(readData, stringData)
-//                    }
-//
-//                })
-//            }
         }
 
         imageView.setOnClickListener(this)
@@ -164,9 +156,21 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
 
-//        var hexString = "B2E2CAD4C3FBB3C72E43535600000000000000000000000000000000000000000000000000000000";
-//        LogUtil.e("TAG",BinaryChange.hexStr2Str(hexString))
 
+
+//        var dateName = ""
+//        var saveName = "789SW测试"
+//        for (i in saveName.indices) {
+//            if (ChineseTextChange.isChinese(saveName[i].toString())) {
+//                LogUtil.e("TAG", ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
+//                dateName += ChineseTextChange.strToHexStr_gb2312(saveName[i].toString())
+//            } else {
+//                LogUtil.e("TAG", BinaryChange.encode(saveName[i].toString()))
+//                dateName += BinaryChange.encode(saveName[i].toString())
+//            }
+//        }
+//        LogUtil.e("TAG",dateName)
+//        LogUtil.e("TAG",ChineseTextChange.strToHexStr_gb2312(saveName))
     }
 
     //开启蓝牙
@@ -193,6 +197,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     //读取数据
     @RequiresApi(Build.VERSION_CODES.O)
     fun readData(readData: Array<String>, stringData: String) {
+        LogUtil.e("TAG",stringData)
         if (readData.isNotEmpty()) {
             //握手命令回传报文帧头
             if (readData[0] == "A0" && readData.size == 16) {
@@ -527,16 +532,17 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                             override fun sureCallBack(saveName: String) {
 //                                tbLayout.selectTab(tbLayout.getTabAt(0))
                                 LogUtil.e("TAG", saveName)
-                                var dateName = ""
-                                for (i in saveName.indices) {
-                                    if (ChineseTextChange.isChinese(saveName[i].toString())) {
-                                        LogUtil.e("TAG", ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
-                                        dateName += ChineseTextChange.strToHexStr_gb2312(saveName[i].toString())
-                                    } else {
-                                        LogUtil.e("TAG", BinaryChange.encode(saveName[i].toString()))
-                                        dateName += BinaryChange.encode(saveName[i].toString())
-                                    }
-                                }
+//                                var dateName = ""
+//                                for (i in saveName.indices) {
+//                                    if (ChineseTextChange.isChinese(saveName[i].toString())) {
+//                                        LogUtil.e("TAG", ChineseTextChange.strToHexStr_gb2312(saveName[i].toString()))
+//                                        dateName += ChineseTextChange.strToHexStr_gb2312(saveName[i].toString())
+//                                    } else {
+//                                        LogUtil.e("TAG", BinaryChange.encode(saveName[i].toString()))
+//                                        dateName += BinaryChange.encode(saveName[i].toString())
+//                                    }
+//                                }
+                                var dateName = ChineseTextChange.strToHexStr_gb2312(saveName)
                                 if(dateName.length>70){
                                     "文件名称过长".showToast(this@MainActivity)
                                     return

@@ -22,11 +22,11 @@ object VersionCheck {
     fun versionInfo(version: String, versionInfoPresenter: VersionInfoPresenter) {
         val params = HashMap<String, String>()
         params["projectName"] = "济宁鲁科"
-        params["actionName"] = "ACMF"
+        params["actionName"] = "MDL"
         params["appVersion"] = version
         params["channel"] = "default"
         params["appType"] = "android"
-        params["clientType"] = "X2"
+        params["clientType"] = "MDL"
         params["phoneSystemVersion"] = "10.0.1"
         params["phoneType"] = "华为"
         val gson = Gson()
