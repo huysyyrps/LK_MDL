@@ -122,7 +122,7 @@ object BleConstant {
                 override fun onWriteFailure(exception: BleException?) {
                     // 指令发送失败
                     if (exception != null) {
-                        Log.i("TAG",exception.getDescription())
+                        Log.i("TAG",exception.description)
                     };
                 }
             });
@@ -152,7 +152,7 @@ object BleConstant {
                     var arrayData = BinaryChange.hexStringToByte(stringData)
                     if (stringData.startsWith("A2")){
                         settingCallBack?.callBackSetting(arrayData,stringData)
-                    }else if (stringData.startsWith("A5")||stringData.startsWith("A6")){
+                    }else if (stringData.startsWith("A5")||stringData.startsWith("A6")||stringData.startsWith("A8")){
                         settingCallBack?.callBackFile(arrayData,stringData)
                     }else{
                         callBack?.backData(arrayData,stringData)

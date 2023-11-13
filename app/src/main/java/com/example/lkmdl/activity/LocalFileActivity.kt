@@ -12,6 +12,7 @@ import com.example.lkmdl.MyApplication.Companion.context
 import com.example.lkmdl.R
 import com.example.lkmdl.util.*
 import com.example.lkmdl.util.dialog.DialogCallBack
+import com.example.lkmdl.util.dialog.DialogDelectDataCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.example.lkmdl.util.file_util.ReadFileCallBack
 import com.example.lkmdl.util.file_util.ReadLocalFile
@@ -20,7 +21,9 @@ import com.example.lkmdl.util.time_picker.BaseTimePickerImp
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import kotlinx.android.synthetic.main.activity_head_myview.*
 import kotlinx.android.synthetic.main.activity_read_file.*
+import java.io.File
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -70,6 +73,7 @@ class LocalFileActivity : BaseActivity(), View.OnClickListener{
         btnEndTime.setOnClickListener(this)
         ivRemoveStartTime.setOnClickListener(this)
         ivRemoveEndTime.setOnClickListener(this)
+        btnDelectLocal.setOnClickListener(this)
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -89,15 +93,26 @@ class LocalFileActivity : BaseActivity(), View.OnClickListener{
         } else {
             linNoData.visibility = View.GONE
             linData.visibility = View.VISIBLE
-            adapter = FileListAdapter(
-                pathList,
-                selectIndex,
-                this,
-                object : AdapterPositionCallBack {
+            adapter = FileListAdapter(pathList, selectIndex, this, object : AdapterPositionCallBack {
                     override fun backPosition(index: Int) {
                         selectIndex = index
                         selectPath = "${filePath}/${pathList[index]}"
                         readFile(selectPath)
+                    }
+
+                    override fun backLongPosition(index: Int) {
+                        DialogUtil().delectDataDialog(this@LocalFileActivity, pathList[index], object : DialogDelectDataCallBack{
+                            override fun cancelCallBack() {
+                            }
+
+                            override fun sureCallBack() {
+                                var file = File("$filePath${ pathList[index]}")
+                                file.delete()
+                                pathList.removeAt(index)
+                                adapter.notifyDataSetChanged()
+                            }
+
+                        })
                     }
                 })
             recyclerView.adapter = adapter
@@ -341,6 +356,24 @@ class LocalFileActivity : BaseActivity(), View.OnClickListener{
             R.id.ivRemoveEndTime -> {
                 btnEndTime.text = resources.getString(R.string.end_time)
                 initDataChart()
+            }
+            R.id.btnDelectLocal -> {
+                DialogUtil().delectDataDialog(this@LocalFileActivity,"全部", object : DialogDelectDataCallBack{
+                    override fun cancelCallBack() {
+                    }
+
+                    override fun sureCallBack() {
+                        for (i in 0 until pathList.size) {
+                            var filePath = context.externalCacheDir.toString() + "/"
+                            var file = File("$filePath${pathList[i]}")
+                            file.delete()
+                            pathList.removeAt(i)
+                        }
+                        adapter.notifyDataSetChanged()
+                        finish()
+                    }
+
+                })
             }
         }
     }

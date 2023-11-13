@@ -27,7 +27,11 @@ import com.example.lkmdl.util.showToast
 import com.permissionx.guolindev.PermissionX
 import kotlinx.android.synthetic.main.activity_read_file.recyclerView
 import kotlinx.android.synthetic.main.dialog_config_option.*
+import kotlinx.android.synthetic.main.dialog_delect_data.*
+import kotlinx.android.synthetic.main.dialog_delectproject_data.*
 import kotlinx.android.synthetic.main.dialog_save_data.*
+import kotlinx.android.synthetic.main.dialog_save_data.btnSaveCancel
+import kotlinx.android.synthetic.main.dialog_save_data.btnSaveSure
 import kotlinx.android.synthetic.main.dialog_scan_again.*
 import kotlinx.android.synthetic.main.progress_dialog.*
 import java.util.ArrayList
@@ -290,6 +294,59 @@ class DialogUtil {
                 dialog.dismiss()
                 callback.sureCallBack(dialog.etSaveName.text.toString())
             }
+        }
+        return dialog
+    }
+
+    /**
+     * 删除文件
+     */
+    @SuppressLint("SetTextI18n")
+    fun delectDataDialog(activity: Activity, fileName:String, callback: DialogDelectDataCallBack): MaterialDialog {
+        dialog = MaterialDialog(activity)
+            .cancelable(false)
+            .show {
+                customView(    //自定义弹窗
+                    viewRes = R.layout.dialog_delect_data,//自定义文件
+                    dialogWrapContent = true,    //让自定义宽度生效
+                    scrollable = true,            //让自定义宽高生效
+                    noVerticalPadding = true    //让自定义高度生效
+                )
+                cornerRadius(16f)
+            }
+        dialog.tvDelectName.text = "您确定要删除${fileName}文件吗？"
+        dialog.btnDelectCancel.setOnClickListener {
+            dialog.dismiss()
+            callback.cancelCallBack()
+        }
+        dialog.btnDelectSure.setOnClickListener {
+            callback.sureCallBack()
+            dialog.dismiss()
+        }
+        return dialog
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun delectProjectDataDialog(activity: Activity, fileName:String, callback: DialogDelectDataCallBack): MaterialDialog {
+        dialog = MaterialDialog(activity)
+            .cancelable(false)
+            .show {
+                customView(    //自定义弹窗
+                    viewRes = R.layout.dialog_delectproject_data,//自定义文件
+                    dialogWrapContent = true,    //让自定义宽度生效
+                    scrollable = true,            //让自定义宽高生效
+                    noVerticalPadding = true    //让自定义高度生效
+                )
+                cornerRadius(16f)
+            }
+        dialog.tvDelectProjectName.text = "您确定要删除${fileName}文件吗？"
+        dialog.btnDelectProjectCancel.setOnClickListener {
+            dialog.dismiss()
+            callback.cancelCallBack()
+        }
+        dialog.btnDelectProjectSure.setOnClickListener {
+            callback.sureCallBack()
+            dialog.dismiss()
         }
         return dialog
     }

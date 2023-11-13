@@ -3,12 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_head_myview.xml" value="0.2223731884057971" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_main.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_read_file.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_readproject_file.xml" value="0.26197916666666665" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/activity_setting.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/adapter_file_list.xml" value="0.13903985507246377" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/adapter_select_item.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_config_option.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_delect_data.xml" value="0.29739583333333336" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_delectproject_data.xml" value="0.26197916666666665" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_empower_error.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_item_header.xml" value="0.24048913043478262" />
@@ -16,6 +20,7 @@
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_save_data.xml" value="0.2609375" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/dialog_scan_again.xml" value="0.24048913043478262" />
         <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/progress_dialog.xml" value="0.24048913043478262" />
+        <entry key="..\:/LuKe-item/LKMDL/app/src/main/res/layout/title_item.xml" value="0.1640625" />
       </map>
     </option>
   </component>

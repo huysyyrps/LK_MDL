@@ -7,16 +7,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.lkmdl.MyApplication
 import com.example.lkmdl.R
 import com.example.lkmdl.adapter.FileListAdapter
-import com.example.lkmdl.util.AdapterPositionCallBack
-import com.example.lkmdl.util.BaseActivity
-import com.example.lkmdl.util.LineChartSetting
-import com.example.lkmdl.util.LogUtil
+import com.example.lkmdl.util.*
 import com.example.lkmdl.util.ble.BinaryChange
 import com.example.lkmdl.util.ble.BleDataMake
 import com.example.lkmdl.util.ble.blenew.BleConstant
 import com.example.lkmdl.util.dialog.DialogCallBack
+import com.example.lkmdl.util.dialog.DialogDelectDataCallBack
 import com.example.lkmdl.util.dialog.DialogUtil
 import com.example.lkmdl.util.time_picker.BaseTimePicker
 import com.example.lkmdl.util.time_picker.BaseTimePickerImp
@@ -25,11 +24,27 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.android.synthetic.main.activity_read_file.*
+import kotlinx.android.synthetic.main.activity_read_file.btnEndTime
+import kotlinx.android.synthetic.main.activity_read_file.btnOption
+import kotlinx.android.synthetic.main.activity_read_file.btnStartTime
+import kotlinx.android.synthetic.main.activity_read_file.ivRemoveEndTime
+import kotlinx.android.synthetic.main.activity_read_file.ivRemoveStartTime
+import kotlinx.android.synthetic.main.activity_read_file.ivSelectTiem
+import kotlinx.android.synthetic.main.activity_read_file.ivSelectTiemClose
+import kotlinx.android.synthetic.main.activity_read_file.linData
+import kotlinx.android.synthetic.main.activity_read_file.linNoData
+import kotlinx.android.synthetic.main.activity_read_file.linReadSelect
+import kotlinx.android.synthetic.main.activity_read_file.linSelectTime
+import kotlinx.android.synthetic.main.activity_read_file.lineChart
+import kotlinx.android.synthetic.main.activity_read_file.readHeader
+import kotlinx.android.synthetic.main.activity_read_file.recyclerView
+import kotlinx.android.synthetic.main.activity_readproject_file.*
+import java.io.File
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 
-class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.ReadCallBack {
+class ProjectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.ReadCallBack {
     var selectIndex = 0
     var dataNum = 0F
     var index = 0
@@ -45,12 +60,13 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
     var set6: ILineDataSet? = null
     var set7: ILineDataSet? = null
     var set8: ILineDataSet? = null
+    var delectIndex = 0
     var dataList = mutableListOf<Array<String>>()
     private var selectList = mutableListOf<Boolean>(true, false, false, false, false, false, false, false)
 
     companion object {
         fun actionStart(context: Context) {
-            val intent = Intent(context, PrijectFileActivity::class.java)
+            val intent = Intent(context, ProjectFileActivity::class.java)
             context.startActivity(intent)
         }
     }
@@ -58,7 +74,7 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_read_file)
+        setContentView(R.layout.activity_readproject_file)
         readHeader.setActivity(this)
         btnOption.setOnClickListener(this)
         ivSelectTiem.setOnClickListener(this)
@@ -67,6 +83,7 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
         btnEndTime.setOnClickListener(this)
         ivRemoveStartTime.setOnClickListener(this)
         ivRemoveEndTime.setOnClickListener(this)
+        btnDelectProjectLocal.setOnClickListener(this)
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -143,6 +160,15 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
                 btnEndTime.text = resources.getString(R.string.end_time)
                 initTimeChart()
             }
+            R.id.btnDelectProjectLocal -> {
+                DialogUtil().delectProjectDataDialog(this,"全部", object : DialogDelectDataCallBack {
+                    override fun cancelCallBack() {
+                    }
+                    override fun sureCallBack() {
+                        BleConstant.startWrite(BleDataMake.delectData("01", ""))
+                    }
+                })
+            }
         }
     }
 
@@ -152,7 +178,7 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
 
     override fun callBackFile(readData: Array<String>, stringData: String) {
         if (readData.isNotEmpty()) {
-            LogUtil.e("TAG", stringData)
+            LogUtil.e("TAGproject", stringData)
             if (readData[0] == "A5" && readData.size == 44) {
                 if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
                     == stringData.substring(stringData.length - 2, stringData.length)) {
@@ -164,53 +190,101 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
                     } else {
                         linNoData.visibility = View.GONE
                         linData.visibility = View.VISIBLE
-                        var fileName = BinaryChange.hexStr2Str(stringData.substring(6, 44))
+                        var fileName = BinaryChange.hexStr2Str(stringData.substring(6, 86))
                         fileList.add(fileName.toString())
-                        hexFileList.add(stringData.substring(6, 44))
+                        hexFileList.add(stringData.substring(6, 86))
                         selectIndex = 0
-                        adapter = FileListAdapter(fileList, selectIndex, this, object : AdapterPositionCallBack {
-                            override fun backPosition(indexSelect: Int) {
-                                lineChart.clear()
-                                set1 = null
-                                set2 = null
-                                set3 = null
-                                set4 = null
-                                set5 = null
-                                set6 = null
-                                set7 = null
-                                set8 = null
-                                index = 0
-                                dataList.clear()
-                                selectIndex = indexSelect
-                                BleConstant.startWrite(BleDataMake.readFile(hexFileList[selectIndex]))
+                        if (readData[1] == readData[2]) {
+                            adapter = FileListAdapter(fileList, selectIndex, this, object : AdapterPositionCallBack {
+                                override fun backPosition(indexSelect: Int) {
+                                    lineChart.clear()
+                                    set1 = null
+                                    set2 = null
+                                    set3 = null
+                                    set4 = null
+                                    set5 = null
+                                    set6 = null
+                                    set7 = null
+                                    set8 = null
+                                    index = 0
+                                    dataList.clear()
+                                    selectIndex = indexSelect
+                                    Thread.sleep(200)
+                                    BleConstant.startWrite(BleDataMake.readFile(hexFileList[selectIndex]))
+                                }
+
+                                override fun backLongPosition(index: Int) {
+                                    DialogUtil().delectDataDialog(this@ProjectFileActivity, fileList[index], object : DialogDelectDataCallBack {
+                                        override fun cancelCallBack() {
+                                        }
+
+                                        override fun sureCallBack() {
+                                            BleConstant.startWrite(BleDataMake.delectData("00", hexFileList[index]))
+                                            delectIndex = index
+                                        }
+                                    })
+                                }
+                            })
+                            adapter.notifyDataSetChanged()
+                            recyclerView.adapter = adapter
+                            recyclerView.invalidate()
+                            if (fileList.size >= 1) {
+                                BleConstant.startWrite(BleDataMake.readFile(hexFileList[0]))
                             }
-                        })
-                        adapter.notifyDataSetChanged()
-                        recyclerView.adapter = adapter
-                        recyclerView.invalidate()
-                        if (fileList.isNotEmpty()) {
-                            BleConstant.startWrite(BleDataMake.readFile(hexFileList[0]))
                         }
                     }
                 }
             }
             if (readData[0] == "A6" && readData.size == 124) {
-                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2)) == stringData.substring(
+                        stringData.length - 2,
+                        stringData.length
+                    )
+                ) {
                     if (readData[2] == "01") {
                         isLast = true
                         linReadSelect.visibility = View.VISIBLE
                     }
                     var itemData = BinaryChange.hexStr2Str(stringData.substring(6, stringData.length - 2))
-                    LogUtil.e("TAG",itemData)
                     val arrayData = itemData.split(",").toTypedArray()
                     dataList.add(arrayData)
                     setEntry(arrayData, index)
                     index++
                 }
             }
+            if (readData[0] == "A8" && readData.size == 4) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2)) == stringData.substring(stringData.length - 2, stringData.length)) {
+                    if (readData[2] == "01") {
+                        if (readData[1] == "00"){
+                            fileList.removeAt(delectIndex)
+                            hexFileList.removeAt(delectIndex)
+                        }else if (readData[1]=="01"){
+                            fileList.clear()
+                            hexFileList.clear()
+                            linNoData.visibility = View.VISIBLE
+                            linData.visibility = View.GONE
+                        }
+                        "删除成功".showToast(this)
+                        adapter.notifyDataSetChanged()
+                    } else if (readData[1] == "00") {
+                        "删除失败".showToast(this)
+                    }
+                }
+            }
         }
     }
+//    public fun delectFile(){
+//        fileList.removeAt(delectIndex)
+//        hexFileList.removeAt(delectIndex)
+//        "删除成功".showToast(this)
+//        adapter.notifyDataSetChanged()
+//    }
+//    fun delectAllFile(){
+//        fileList.clear()
+//        hexFileList.clear()
+//        "删除成功".showToast(this)
+//        adapter.notifyDataSetChanged()
+//    }
 
     private fun setEntry(arrayData: Array<String>, index: Int) {
         if (arrayData.size >= 9) {
@@ -278,7 +352,6 @@ class PrijectFileActivity : BaseActivity(), View.OnClickListener, BleConstant.Re
             val onExchangeCurrent = java.lang.Float.valueOf(arrayData[7])
             data.addEntry(Entry(index.toFloat(), onExchangeCurrent), 6)
 
-            LogUtil.e("TAG","$index")
             if (set8 == null) {
                 set8 = createSet(getColor(R.color.magenta), getString(R.string.on_ac_voltage))
                 data.addDataSet(set8)

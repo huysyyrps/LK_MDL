@@ -55,9 +55,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     var offOnState: Int = 0
     var gatherTime: Int = 0
     var offTine: Int = 0
-    var gatherLaterTime: Int = 0
+    var offGatherLaterTime: Int = 0
     var onTime: Int = 0
-    var onLater: Int = 0
+    var onGatherLaterTime: Int = 0
+    var openGatherLaterTime:Int = 0
     var backTime: Int = 0
     var startYear: Int = 0
     var startMoon: String = ""
@@ -84,7 +85,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     var set8 : ILineDataSet? = null
     private val tabItemStr = arrayListOf<String>().apply {
         add(context.resources.getString(R.string.start))
-        add(context.resources.getString(R.string.stop))
+        add(context.resources.getString(R.string.stop_gather))
+        add(context.resources.getString(R.string.stop_transfer))
         add(context.resources.getString(R.string.refresh))
         add(context.resources.getString(R.string.save))
         add(context.resources.getString(R.string.aline_time))
@@ -155,9 +157,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
         ivMainTiemClose.setOnClickListener(this)
         version = ClientVersion.getVersion(applicationContext)
         tvCurrentVersion.text = version
-
-
-
+//region
 //        var dateName = ""
 //        var saveName = "789SW测试"
 //        for (i in saveName.indices) {
@@ -171,6 +171,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
 //        }
 //        LogUtil.e("TAG",dateName)
 //        LogUtil.e("TAG",ChineseTextChange.strToHexStr_gb2312(saveName))
+        //endregion
     }
 
     //开启蓝牙
@@ -197,7 +198,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
     //读取数据
     @RequiresApi(Build.VERSION_CODES.O)
     fun readData(readData: Array<String>, stringData: String) {
-        LogUtil.e("TAG",stringData)
+        LogUtil.e("TAGmain",stringData)
         if (readData.isNotEmpty()) {
             //握手命令回传报文帧头
             if (readData[0] == "A0" && readData.size == 16) {
@@ -227,10 +228,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 }
             }
             //读取当前正在运行的配置命令回传报文帧头
-            if (readData[0] == "A1" && readData.size == 67) {
-                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
-                    == stringData.substring(stringData.length - 2, stringData.length)
-                ) {
+            if (readData[0] == "A1" && readData.size == 69) {
+                if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2)) == stringData.substring(stringData.length - 2, stringData.length)) {
                     var offOn = Integer.toBinaryString(Integer.parseInt(readData[41], 16))
                     while (offOn.length < 5) {
                         offOn = "0$offOn"
@@ -241,33 +240,37 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                         dcCurrent = offOn.substring(2, 3).toInt()
                         exCurrent = offOn.substring(3, 4).toInt()
                         offOnState = offOn.substring(4, 5).toInt()
+                        //采集周期
                         gatherTime = Integer.parseInt("${readData[43]}${readData[42]}", 16)
+                        //通断时间 OFF时间
                         offTine = Integer.parseInt("${readData[45]}${readData[44]}", 16)
-                        gatherLaterTime = Integer.parseInt("${readData[47]}${readData[46]}", 16)
+                        //OFF采集延时
+                        offGatherLaterTime = Integer.parseInt("${readData[47]}${readData[46]}", 16)
+                        //通断时间ON时间
                         onTime = Integer.parseInt("${readData[49]}${readData[48]}", 16)
-                        onLater = Integer.parseInt("${readData[51]}${readData[50]}", 16)
-                        backTime = Integer.parseInt("${readData[65]}${readData[64]}", 16)
+                        onGatherLaterTime = Integer.parseInt("${readData[51]}${readData[50]}", 16)
+                        openGatherLaterTime = Integer.parseInt("${readData[53]}${readData[52]}", 16)
+                        backTime = Integer.parseInt("${readData[67]}${readData[66]}", 16)
 
-                        startYear = Integer.parseInt(readData[52], 16)
-                        startMoon = BinaryChange.hex2Decimal(readData[53], 2)
-                        startDay = BinaryChange.hex2Decimal(readData[54], 2)
-                        startHour = BinaryChange.hex2Decimal(readData[55], 2)
-                        startDivide = BinaryChange.hex2Decimal(readData[56], 2)
-                        startSecond = BinaryChange.hex2Decimal(readData[57], 2)
+                        startYear = Integer.parseInt(readData[54], 16)
+                        startMoon = BinaryChange.hex2Decimal(readData[55], 2)
+                        startDay = BinaryChange.hex2Decimal(readData[56], 2)
+                        startHour = BinaryChange.hex2Decimal(readData[57], 2)
+                        startDivide = BinaryChange.hex2Decimal(readData[58], 2)
+                        startSecond = BinaryChange.hex2Decimal(readData[59], 2)
 
-                        endYear = Integer.parseInt(readData[58], 16)
-                        endMoon = BinaryChange.hex2Decimal(readData[59], 2)
-                        endDay = BinaryChange.hex2Decimal(readData[60], 2)
-                        endHour = BinaryChange.hex2Decimal(readData[61], 2)
-                        endDivide = BinaryChange.hex2Decimal(readData[62], 2)
-                        endSecond = BinaryChange.hex2Decimal(readData[63], 2)
+                        endYear = Integer.parseInt(readData[60], 16)
+                        endMoon = BinaryChange.hex2Decimal(readData[61], 2)
+                        endDay = BinaryChange.hex2Decimal(readData[62], 2)
+                        endHour = BinaryChange.hex2Decimal(readData[63], 2)
+                        endDivide = BinaryChange.hex2Decimal(readData[64], 2)
+                        endSecond = BinaryChange.hex2Decimal(readData[65], 2)
                     }
                     var startTime = "20$startYear-$startMoon-$startDay $startHour:$startDivide:$startSecond"
                     var endTime = "20$endYear-$endMoon-$endDay $endHour:$endDivide:$endSecond"
                     SettingActivity.actionStart(
                         this@MainActivity, dcVoltage, exVoltage, dcCurrent, exCurrent, offOnState,
-                        gatherTime, offTine, gatherLaterTime, onTime, onLater, backTime, startTime, endTime
-                    )
+                        gatherTime, offTine, offGatherLaterTime, onTime, onGatherLaterTime,openGatherLaterTime, backTime, startTime, endTime)
                 }
             }
             //时间校准命令报文识别码
@@ -472,8 +475,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                     context.resources.getString(R.string.start) -> {
                         BleConstant.startWrite(BleDataMake.readRealStart())
                     }
-                    context.resources.getString(R.string.stop) -> {
-                        BleConstant.startWrite(BleDataMake.readRealStop())
+                    context.resources.getString(R.string.stop_gather) -> {
+                        BleConstant.startWrite(BleDataMake.readRealStopGather())
+                    }
+                    context.resources.getString(R.string.stop_transfer) -> {
+                        BleConstant.startWrite(BleDataMake.readRealStopTransfer())
                     }
                     context.resources.getString(R.string.refresh) -> {
                         mainLineChart.clear()
@@ -589,7 +595,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, VersionInfoContract.V
                 LocalFileActivity.actionStart(this)
             }
             R.id.linProjectFile -> {
-                PrijectFileActivity.actionStart(this)
+                ProjectFileActivity.actionStart(this)
             }
         }
     }

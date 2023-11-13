@@ -19,7 +19,7 @@
                 app:header_title="@string/file_list" />
 
         <com.example.lkmdl.view.BaseButton
-                android:id="@+id/btnDelectLocal"
+                android:id="@+id/btnDelectProjectLocal"
                 style="@style/BaseButton"
                 android:layout_width="85dp"
                 android:layout_gravity="center|right"
@@ -39,7 +39,7 @@
             android:id="@+id/linNoData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            >
 
         <ImageView
                 android:id="@+id/ivRef"
@@ -61,7 +61,8 @@
     <FrameLayout
             android:id="@+id/linData"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
         <LinearLayout
                 android:layout_width="match_parent"

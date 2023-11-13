@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical">
+
+    <include layout="@layout/dialog_item_header" />
+
+    <TextView
+            android:id="@+id/tvDelectName"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/linelayout_backthemecolor_radion"
+            android:gravity="top|left"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textSize="14dp"
+            android:maxLength="20"/>
+<!--
+            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"-->
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="0dp"
+            android:orientation="horizontal">
+
+        <com.example.lkmdl.view.BaseButton
+                android:id="@+id/btnDelectCancel"
+                style="@style/BaseButton"
+                android:layout_width="0dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:text="@string/btn_cancel"
+                app:bg_color="@color/theme_color"
+                app:bg_corner="5dp" />
+
+        <com.example.lkmdl.view.BaseButton
+                android:id="@+id/btnDelectSure"
+                style="@style/BaseButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="@string/btn_sure"
+                app:bg_color="@color/theme_color"
+                app:bg_corner="5dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -82,8 +82,16 @@ object BleDataMake {
     /**
      * 停止读取实时数据
      */
-    fun readRealStop():String{
-        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMESTOPCODE}"
+    fun readRealStopGather():String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMESTOPGATHERCODE}"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+    /**
+     * 停止传输
+     */
+    fun readRealStopTransfer():String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.REALTIMEDATA}${CharacteristicUuid.REALTIMESTOPTRANSFERCODE}"
         var checksum = BaseData.hexStringToBytes(data)
         return "$data$checksum"
     }
@@ -93,6 +101,15 @@ object BleDataMake {
      */
     fun  makeEmpowerData(deviceDate:String, activatCode:String):String{
         var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.EMPOWERCODE}${activatCode}${deviceDate}"
+        var checksum = BaseData.hexStringToBytes(data)
+        return "$data$checksum"
+    }
+
+    /**
+     * 授权
+     */
+    fun  delectData(delectState:String, deviceDate:String):String{
+        var data = "${CharacteristicUuid.CONNECTHEADER}${CharacteristicUuid.DELECTCODE}$delectState${deviceDate}"
         var checksum = BaseData.hexStringToBytes(data)
         return "$data$checksum"
     }

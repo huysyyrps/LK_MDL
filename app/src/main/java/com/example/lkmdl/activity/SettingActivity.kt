@@ -30,9 +30,10 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
 
     private var gatherTime = 0
     private var offTime = 0
-    private var gatherLaterTime = 0
+    private var offGatherLaterTime = 0
     private var onTime = 0
-    private var onLater = 0
+    private var onGatherLaterTime = 0
+    private var openGatherLaterTime = 0
     private var backTime = 0
     private var startTime = ""
     private var endTime = ""
@@ -48,9 +49,10 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
             offOnState: Int,
             gatherTime: Int,
             offTime: Int,
-            gatherLaterTime: Int,
+            offGatherLaterTime: Int,
             onTime: Int,
-            onLater: Int,
+            onGatherLaterTime: Int,
+            openGatherLaterTime: Int,
             backTime: Int,
             startTime: String,
             endTime: String
@@ -63,9 +65,10 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
             intent.putExtra("offOnState", offOnState)
             intent.putExtra("gatherTime", gatherTime)
             intent.putExtra("offTime", offTime)
-            intent.putExtra("gatherLaterTime", gatherLaterTime)
+            intent.putExtra("offGatherLaterTime", offGatherLaterTime)
             intent.putExtra("onTime", onTime)
-            intent.putExtra("onLater", onLater)
+            intent.putExtra("onGatherLaterTime", onGatherLaterTime)
+            intent.putExtra("openGatherLaterTime", openGatherLaterTime)
             intent.putExtra("backTime", backTime)
             intent.putExtra("startTime", startTime)
             intent.putExtra("endTime", endTime)
@@ -93,12 +96,12 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
         dcCurrent = intent.getIntExtra("dcCurrent", 0)
         exCurrent = intent.getIntExtra("exCurrent", 0)
         offOnState = intent.getIntExtra("offOnState", 0)
-
         gatherTime = intent.getIntExtra("gatherTime", 0)
         offTime = intent.getIntExtra("offTime", 0)
-        gatherLaterTime = intent.getIntExtra("gatherLaterTime", 0)
+        offGatherLaterTime = intent.getIntExtra("offGatherLaterTime", 0)
         onTime = intent.getIntExtra("onTime", 0)
-        onLater = intent.getIntExtra("onLater", 0)
+        onGatherLaterTime = intent.getIntExtra("onGatherLaterTime", 0)
+        openGatherLaterTime = intent.getIntExtra("openGatherLaterTime", 0)
         backTime = intent.getIntExtra("backTime", 0)
         startTime = intent.getStringExtra("startTime").toString()
         endTime = intent.getStringExtra("endTime").toString()
@@ -131,9 +134,10 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
 
         etGatherTime.setText(gatherTime.toString())
         etOffTime.setText(offTime.toString())
-        etGatherLaterTime.setText(gatherLaterTime.toString())
+        etOffGatherLaterTime.setText(offGatherLaterTime.toString())
         etOnTime.setText(onTime.toString())
-        etOnLater.setText(onLater.toString())
+        etOnGatherLaterTime.setText(onGatherLaterTime.toString())
+        etOpenGatherLaterTime.setText(openGatherLaterTime.toString())
         etBackTime.setText(backTime.toString())
         tvStartTime.text = startTime
         tvEndTime.text = endTime
@@ -158,56 +162,58 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
                 })
             }
             R.id.btnUpData -> {
-                var dcVoltage = if (sbDCVoltage.isChecked) {
+                val dcVoltage = if (sbDCVoltage.isChecked) {
                     "1"
                 } else {
                     "0"
                 }
-                var exVoltage = if (sbEXVoltage.isChecked) {
+                val exVoltage = if (sbEXVoltage.isChecked) {
                     "1"
                 } else {
                     "0"
                 }
-                var dcCurrent = if (sbDCCurrent.isChecked) {
+                val dcCurrent = if (sbDCCurrent.isChecked) {
                     "1"
                 } else {
                     "0"
                 }
-                var exCurrent = if (sbEXCurrent.isChecked) {
+                val exCurrent = if (sbEXCurrent.isChecked) {
                     "1"
                 } else {
                     "0"
                 }
-                var offOnState = if (sbOffOn.isChecked) {
+                val offOnState = if (sbOffOn.isChecked) {
                     "1"
                 } else {
                     "0"
                 }
-                var s = BinaryChange.toHexString("$dcVoltage$exVoltage$dcCurrent$exCurrent$offOnState")
+                val s = BinaryChange.toHexString("$dcVoltage$exVoltage$dcCurrent$exCurrent$offOnState")
 
-                var gatherTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherTime.text.toString().toInt().toString()), 4).toString())
-                var offTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOffTime.text.toString().toInt().toString()), 4).toString())
-                var gatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherLaterTime.text.toString().toInt().toString()), 4).toString())
-                var onTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnTime.text.toString().toInt().toString()), 4).toString())
-                var onLaterArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnLater.text.toString().toInt().toString()), 4).toString())
-                var backTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etBackTime.text.toString().toInt().toString()), 4).toString())
+                val gatherTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etGatherTime.text.toString().toInt().toString()), 4).toString())
+                val offTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOffTime.text.toString().toInt().toString()), 4).toString())
+                val offGatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOffGatherLaterTime.text.toString().toInt().toString()), 4).toString())
+                val onTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnTime.text.toString().toInt().toString()), 4).toString())
+                val onGatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOnGatherLaterTime.text.toString().toInt().toString()), 4).toString())
+                val openGatherLaterTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etOpenGatherLaterTime.text.toString().toInt().toString()), 4).toString())
+                val backTimeArray = BinaryChange.hexStringToByte(BinaryChange.toHex(Integer.parseInt(etBackTime.text.toString().toInt().toString()), 4).toString())
 
-                var gatherTime = gatherTimeArray[1]+gatherTimeArray[0]
-                var offTime = offTimeArray[1]+offTimeArray[0]
-                var gatherLaterTime = gatherLaterTimeArray[1]+gatherLaterTimeArray[0]
-                var onTime = onTimeArray[1]+onTimeArray[0]
-                var onLater = onLaterArray[1]+onLaterArray[0]
-                var backTime = backTimeArray[1]+backTimeArray[0]
+                val gatherTime = gatherTimeArray[1]+gatherTimeArray[0]
+                val offTime = offTimeArray[1]+offTimeArray[0]
+                val offGatherLaterTime = offGatherLaterTimeArray[1]+offGatherLaterTimeArray[0]
+                val onTime = onTimeArray[1]+onTimeArray[0]
+                val onGatherLaterTime = onGatherLaterTimeArray[1]+onGatherLaterTimeArray[0]
+                val openGatherLaterTime = openGatherLaterTimeArray[1]+openGatherLaterTimeArray[0]
+                val backTime = backTimeArray[1]+backTimeArray[0]
 
 
-                var startDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(tvStartTime.text.toString())
-                var endDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(tvEndTime.text.toString())
+                val startDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(tvStartTime.text.toString())
+                val endDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(tvEndTime.text.toString())
 
-                var startTime = BleTimeData.timeDateToHex(startDate)
+                val startTime = BleTimeData.timeDateToHex(startDate)
 
-                var endTime = BleTimeData.timeDateToHex(endDate)
+                val endTime = BleTimeData.timeDateToHex(endDate)
 
-                var data = "BEA2$s$gatherTime$offTime$gatherLaterTime$onTime$onLater$startTime$endTime$backTime"
+                var data = "BEA2$s$gatherTime$offTime$offGatherLaterTime$onTime$onGatherLaterTime$openGatherLaterTime$startTime$endTime$backTime"
                 data = "$data${BinaryChange.HexStringToBytes(data)}"
                 BleConstant.startWrite(data)
                 dialog = DialogUtil().initProgressDialog(this,resources.getString(R.string.setting))
@@ -219,7 +225,7 @@ class SettingActivity : BaseActivity(), View.OnClickListener,BleConstant.ReadCal
     }
 
     override fun callBackSetting(readData: Array<String>, stringData: String) {
-        LogUtil.e("TAG",stringData)
+        LogUtil.e("TAGsetting",stringData)
         if (BinaryChange.HexStringToBytes(stringData.substring(0, stringData.length - 2))
             == stringData.substring(stringData.length - 2, stringData.length)) {
             if (readData[0] == "A2"&&readData[1] == "01") {

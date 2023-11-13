@@ -14,7 +14,7 @@ internal class FileListAdapter(
     var dataList: ArrayList<String>,
     var selectIndex: Int,
     var context: Activity,
-    val adapterPositionCallBack: AdapterPositionCallBack
+    private val adapterPositionCallBack: AdapterPositionCallBack
 )  : RecyclerView.Adapter<FileListAdapter.ViewHolder>() {
     //在内部类里面获取到item里面的组件
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -32,6 +32,15 @@ internal class FileListAdapter(
             notifyDataSetChanged()
             adapterPositionCallBack.backPosition(selectIndex)
         }
+        //长按
+        viewHolder.backItem.setOnLongClickListener {
+            var position= viewHolder.layoutPosition
+            selectIndex = position
+            notifyDataSetChanged()
+            adapterPositionCallBack.backLongPosition(selectIndex)
+            true
+        }
+
         return viewHolder
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

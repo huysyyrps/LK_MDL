@@ -18,12 +18,13 @@ object Constant {
     const val SCANBBACK = "/LKBScan"
 
     val SELECTITEM = listOf<String>(
-        MyApplication.context.resources.getString(R.string.on_direct_current),
         MyApplication.context.resources.getString(R.string.off_direct_current),
-        MyApplication.context.resources.getString(R.string.on_ac_current),
-        MyApplication.context.resources.getString(R.string.off_ac_current),
-        MyApplication.context.resources.getString(R.string.on_direct_voltage),
         MyApplication.context.resources.getString(R.string.off_direct_voltage),
-        MyApplication.context.resources.getString(R.string.on_ac_voltage),
-        MyApplication.context.resources.getString(R.string.off_ac_voltage))
+        MyApplication.context.resources.getString(R.string.off_ac_current),
+        MyApplication.context.resources.getString(R.string.off_ac_voltage),
+        MyApplication.context.resources.getString(R.string.on_direct_current),
+        MyApplication.context.resources.getString(R.string.on_direct_voltage),
+        MyApplication.context.resources.getString(R.string.on_ac_current),
+        MyApplication.context.resources.getString(R.string.on_ac_voltage))
+
 }

@@ -21,17 +21,21 @@
     <string name="ex_current">交流电流测量</string>
     <string name="on_off_measure">通断测量</string>
 
-    <string name="start">开始</string>
-    <string name="stop">停止</string>
-    <string name="refresh">刷新</string>
+    <string name="start">开始采集</string>
+    <string name="stop_gather">停止采集</string>
+    <string name="stop_transfer">停止传输</string>
+    <string name="refresh">刷新数据</string>
     <string name="main">主页</string>
-    <string name="save">保存</string>
+    <string name="save">保存数据</string>
+    <string name="delect_all">全部删除</string>
 
     <string name="gather_time">采集周期</string>
     <string name="off_time">通断时间OFF</string>
-    <string name="off_gather_later_time">断电采集启动延时</string>
+    <string name="off_gather_later_time">OFF采集延时</string>
     <string name="on_time">通断时间ON</string>
     <string name="on_later">通电延时时间</string>
+    <string name="on_gather_later_time">ON采集延时</string>
+    <string name="open_later_time">开机采集延时</string>
 
     <string name="start_date">开始检测时间</string>
     <string name="end_date">结束检测时间</string>
@@ -92,7 +96,7 @@
 
     <string name="has_register">已注册</string>
 
-    <string name="save_data">保存文件名</string>
+    <string name="save_data">保存文件</string>
     <string name="project_file">设备文件</string>
     <string name="local_file">本地文件</string>
 
